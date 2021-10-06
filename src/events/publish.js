@@ -4,6 +4,7 @@ import { DatabaseManager } from '../database/databaseManager.js'
 
 const app = express()
 const dbm = new DatabaseManager
+
 app.use(express.json)
 
 app.post('/publish', function (req, res){
