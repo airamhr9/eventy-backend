@@ -3,6 +3,8 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
+search("", ["Museos","Fiesta"])
+
 function search(searchText, searchTags){
 
     get(child(rdbRef, 'events/')).then((snapshot) =>{
@@ -12,9 +14,13 @@ function search(searchText, searchTags){
 
         events.forEach(element => {
           let names = makeLowerCase(element.name)
+          let tags = element.tags
+
 
           if(names.includes(makeLowerCase(searchText))){
-            result.push(element)
+              if(findCommonElements(tags, searchTags)){
+                result.push(element)
+              }
           }
         })
 
@@ -23,10 +29,17 @@ function search(searchText, searchTags){
     })
 }
 
-search('DE', [])
-
 function makeLowerCase(value) {
-  return value.toString().toLowerCase();
+  return value.toString().toLowerCase()
+}
+
+
+function findCommonElements(arr1, arr2) {
+  try {
+    return arr1.some(item => arr2.includes(item))
+  } catch (error) {
+    return "mierda"
+  }
 }
 
 function returnEvents(result){
