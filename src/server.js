@@ -3,7 +3,7 @@ import express from 'express'
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 
-export const app = express()
+const app = express()
 const port = process.argv[2] || 8000
 
 app.use(express.json())
