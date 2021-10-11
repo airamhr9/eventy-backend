@@ -3,13 +3,17 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
-export function getUser(res, userId) {
-    get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
+export let user
+
+export async function getUser(userId, sendResponse, res) {
+    await get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
         if (snapshot.exists()) {
-            let user = snapshot.val()
-            res.send(user)
+            user = snapshot.val()
         } else {
-            res.send('User does not exist')
+            user = 'User does not exist'
+        }
+        if (sendResponse) {
+            res.send(user)
         }
         }).catch((error) => {
             console.error(error)
