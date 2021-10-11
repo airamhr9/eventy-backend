@@ -20,7 +20,7 @@ app.get('/search', (req, res) =>{
 })
 
 app.get('/recomend', (req, res) =>{
-    recomend(res, 0)
+    recomend(res, "39.357081, -0.324842", ["Playa", "Museos", "Fiesta"])
 })
 
 app.get('/users', (req, res) => {
