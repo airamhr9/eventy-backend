@@ -2,6 +2,7 @@ import express from 'express'
 
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
+import { getUser, updateUser } from './users/userProfile.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -16,7 +17,7 @@ app.get('/users', (req, res) => {
     if (req.query.preferences == 'true') { // No borrar el " == 'true' "
         getUserPreferences(res, req.query.id)
     } else {
-        res.send('Not supported')
+        getUser(res, req.query.id)
     }
 })
 
@@ -25,7 +26,8 @@ app.post('/users', (req, res) => {
         setUserPreferences(req.query.id, req.body)
         res.send()
     } else {
-        res.send('Not supported')
+        updateUser(req.body)
+        res.send()
     }
 })
 

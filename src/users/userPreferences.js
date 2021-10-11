@@ -12,7 +12,7 @@ export function getUserPreferences(res, userId) {
             res.send([])
         }
         }).catch((error) => {
-        console.error(error)
+            console.error(error)
     });
 }
 
