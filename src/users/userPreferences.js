@@ -7,6 +7,9 @@ export function getUserPreferences(res, userId) {
     get(child(rdbRef, `users/${userId}/preferences`)).then((snapshot) => {
         if (snapshot.exists()) {
             let preferences = snapshot.val()
+            if(res == null){
+                return preferences
+            }
             res.send(preferences)
         } else {
             res.send([])

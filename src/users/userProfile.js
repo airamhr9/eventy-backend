@@ -7,6 +7,9 @@ export function getUser(res, userId) {
     get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
         if (snapshot.exists()) {
             let user = snapshot.val()
+            if(res == null){
+                return user
+            }
             res.send(user)
         } else {
             res.send('User does not exist')
