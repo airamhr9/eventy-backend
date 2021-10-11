@@ -1,4 +1,5 @@
 import express from 'express'
+import { recomend } from './search/recomendations.js'
 import { search } from './search/search.js'
 
 import { getTags } from './tags.js'
@@ -14,8 +15,12 @@ app.get('/tags', (req, res) => {
     getTags(res)
 })
 
-app.get('/events', (req, res) =>{
+app.get('/search', (req, res) =>{
     search("de", ["Museos"], res)
+})
+
+app.get('/recomend', (req, res) =>{
+    recomend(res, 0)
 })
 
 app.get('/users', (req, res) => {

@@ -13,13 +13,13 @@ export function search(searchText, searchTags, res){
           let names = makeLowerCase(element.name)
           let tags = element.tags
 
-
           if(names.includes(makeLowerCase(searchText))){
-              if(findCommonElements(tags, searchTags)){
-                result.push(element)
-              }
+            if(findCommonElements(tags, searchTags)){
+              result.push(element)
+            }
           }
         })
+        
         returnEvents(res, result)
       }
     })
@@ -28,7 +28,6 @@ export function search(searchText, searchTags, res){
 function makeLowerCase(value) {
   return value.toString().toLowerCase()
 }
-
 
 function findCommonElements(arr1, arr2) {
   try {
@@ -42,6 +41,6 @@ function returnEvents(res, result){
   try {
     res.send(result)
   } catch (error) {
-    return ""
+    return "no se pudo enviar"
   }
 }
