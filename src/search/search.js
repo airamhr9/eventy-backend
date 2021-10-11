@@ -3,10 +3,7 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
-search("", ["Museos","Fiesta"])
-
-function search(searchText, searchTags){
-
+export function search(searchText, searchTags, res){
     get(child(rdbRef, 'events/')).then((snapshot) =>{
       if(snapshot.exists()){
         let result = []
@@ -23,8 +20,7 @@ function search(searchText, searchTags){
               }
           }
         })
-
-        returnEvents(result)
+        returnEvents(res, result)
       }
     })
 }
@@ -38,10 +34,14 @@ function findCommonElements(arr1, arr2) {
   try {
     return arr1.some(item => arr2.includes(item))
   } catch (error) {
-    return "mierda"
+    return "no se pudo encontrar"
   }
 }
 
-function returnEvents(result){
-  console.log(result)
+function returnEvents(res, result){
+  try {
+    res.send(result)
+  } catch (error) {
+    return ""
+  }
 }

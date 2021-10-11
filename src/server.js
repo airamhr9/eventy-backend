@@ -1,4 +1,5 @@
 import express from 'express'
+import { search } from './search/search.js'
 
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
@@ -11,6 +12,10 @@ app.use(express.json())
 
 app.get('/tags', (req, res) => {
     getTags(res)
+})
+
+app.get('/events', (req, res) =>{
+    search("de", ["Museos"], res)
 })
 
 app.get('/users', (req, res) => {
