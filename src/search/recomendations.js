@@ -5,23 +5,24 @@ import { getUser } from '../users/userProfile.js'
 
 const rdbRef = ref(rdb)
 
-export function recomend(res, userId){
-    let userPref = getUserPreferences(res, userId)
-    let user = getUser(res, userId)
-    let result = []
+export function recomend(res, user){
 
     get(child(rdbRef, `events/`)).then((snapshot) => {
         if(snapshot.exists()){
+            let userPref = user.preferences
+            let result = []
             let events = snapshot.val()
 
             events.forEach(element => {
                 if(findCommonElements(element.tags, userPref)){
                     result.push(element)
+                    //console.log(result)
                 }
             })
+            
+            sortByLocation(result, user, res)
         }
-        sortByLocation(result, user)
-        returnRecomendations(res, result)
+        
     })
 }
 
@@ -33,26 +34,27 @@ function findCommonElements(arr1, arr2) {
     }
 }
 
-function sortByLocation(events, userLocation){
+function sortByLocation(events, user, res){
     try {
-        let [latU, longU] = userLocation.location.split(", ")
-
-        for(let i = 0; i < events.length; i++){
-            let [latE, longE] = events[i].location.split(", ")
-            let dist = distance(parseInt(latU), parseInt(longU), latE, longE)
-
-            events[i].distance = dist
-        }
+        var [latU, longU] = user.location.split(", ")
+        
+        events.forEach(element => {
+            var [latE, longE] = element.location.split(", ")
+            var dist = distance(parseInt(latU), parseInt(longU), latE, longE)
+            console.log(dist)
+            element.distance = dist
+        })
 
         events.sort(function(a, b){
             return a.distance - b.distance
         })
 
         console.log(events)
-    } catch (error) {
-        "no se pudo ordenar"
-    }
 
+        returnRecomendations(res, result)
+    } catch (error) {
+        return "xd"
+    }
 }
 
 function distance(lat1, long1, lat2, long2, unit){
