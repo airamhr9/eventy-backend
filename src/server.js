@@ -20,7 +20,13 @@ app.get('/search', (req, res) =>{
 })
 
 app.get('/recomend', (req, res) =>{
-    recomend(res, "39.357081, -0.324842", ["Playa", "Museos", "Fiesta"])
+    //recomend(res, "39.357081, -0.324842", ["Playa", "Museos", "Fiesta"])
+    recomendation()
+    async function recomendation(){
+        await getUser(0, false)
+        recomend(res, user)
+    }
+    
 })
 
 app.get('/users', (req, res) => {
@@ -47,8 +53,8 @@ app.listen(port, () => {
 
 
 // Código de ejemplo
-async function prueba() {
+/*async function prueba() {
     await getUser(1, false)
     console.log(user)
 }
-prueba()
+prueba()*/

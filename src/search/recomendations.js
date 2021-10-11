@@ -7,20 +7,20 @@ const rdbRef = ref(rdb)
 
 
 
-export function recomend(res, userLoc, userPref){
-
+export function recomend(res, user){
     get(child(rdbRef, `events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let result = []
             let events = snapshot.val()
+            let pref = user.preferences
 
             events.forEach(element => {
-                if(findCommonElements(element.tags, userPref)){
+                if(findCommonElements(element.tags, pref)){
                     result.push(element)
                 }
             })
             
-            sortByLocation(result, userLoc, res)
+            sortByLocation(result, user.location, res)
         }
         
     })
@@ -34,16 +34,13 @@ function findCommonElements(arr1, arr2) {
     }
 }
 
-function sortByLocation(events, user, res){
+function sortByLocation(events, userLoc, res){
     try {
-        var [latU, longU] = user.split(", ")
-        console.log([latU, longU])
-        
+        var [latU, longU] = userLoc.split(", ")
+
         events.forEach(element => {
             var [latE, longE] = element.location.split(", ")
-            console.log([latE, longE])
             var dist = distance(latU, longU, latE, longE, "K")
-            console.log(dist)
             element.distance = dist.toFixed(2)
         })
 
