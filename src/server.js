@@ -1,10 +1,11 @@
 import express from 'express'
+
 import { recomend } from './search/recomendations.js'
 import { search } from './search/search.js'
-
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
+import { createCommunity } from './communities/community.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -45,6 +46,10 @@ app.post('/users', (req, res) => {
         updateUser(req.body)
         res.send()
     }
+})
+
+app.put('/communities', (req, res) => {
+    createCommunity(req.body, res)
 })
 
 app.listen(port, () => {
