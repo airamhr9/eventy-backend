@@ -1,6 +1,6 @@
 export class Event {
 
-    constructor(descripcion, finishDate, images, location, maxParticipants, name, owner, price, isPrivate, startDate, summary, tags){
+    constructor(descripcion, finishDate, images, location, maxParticipants, name, owner, price, isPrivate, startDate, summary, tags, ){
         this.descripcion = descripcion
         this.finishDate = finishDate
         this.images = images
@@ -14,9 +14,9 @@ export class Event {
         this.startDate = startDate
         this.summary = summary
         this.tags = tags
-        this.community = ""
+        this.community = [] 
     }
-
+    
     addTags(tags) {this.tags.concat(tags)} 
 
     addParticipants( participants ) {this.participants.concat(participants)} 

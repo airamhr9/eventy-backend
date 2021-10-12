@@ -7,46 +7,22 @@ const dbm = new DatabaseManager
 
 app.use(express.json)
 
-app.post('/publish', function (req, res){
-    var result = checkEvent(  req.body.name,
-                              req.body.startDate,
-                              req.body.FinishDate,
-                              req.body.location,
-                              req.body.description,
-                              req.body.summary,
-                              req.body.private,
-                              req.body.images,
-                              req.body.maxParticipants,
-                              req.body.price,
-                              req.body.tags )
-
-    if(result == "True"){
-        const newEvent = new Event( "3000", 
-                                req.body.name, 
-                                req.body.startDate, 
-                                req.body.FinishDate, 
-                                req.body.location, 
-                                req.body.description, 
-                                req.body.summary, 
-                                req.body.private, 
+app.post('/publish', function (req, res){ 
+    const newEvent = new Event( req.body.description, 
+                                req.body.finishDate, 
                                 req.body.images, 
+                                req.body.location, 
                                 req.body.maxParticipants, 
-                                req.body.price,
-                                "owner",
-                                "chat",
-                                req.body.tags)
+                                req.body.name, 
+                                req.body.owner, 
+                                req.body.price, 
+                                req.body.private, 
+                                req.body.startDate,
+                                req.body.summary,
+                                req.body.tags,)
 
         dbm.uploadEvent(newEvent)
         
-        res.status(result).send()
+        res.status(Boolean.True).send()
 
-    } else{ res.status(result).send()}
-})
-
-
-
-
-
-
-
-
+    })
