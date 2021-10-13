@@ -6,6 +6,7 @@ import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
 import { createCommunity } from './communities/community.js'
+import { getEvent, event, getEventParticipants, eventParticipants } from './events/participants.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -48,6 +49,16 @@ app.post('/users', (req, res) => {
     } else {
         updateUser(req.body)
         res.send()
+    }
+})
+
+app.get('/events', async (req, res) => {
+    if (req.query.participants == 'true') { 
+        await getEventParticipants(req.query.id)
+        res.send(eventParticipants)
+    } else {
+        await getEvent(req.query.id)
+        res.send(event)
     }
 })
 
