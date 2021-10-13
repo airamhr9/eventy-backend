@@ -3,7 +3,7 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
-export function recomend(res, user, latitude, longitude){
+export function recomend(res, user, latitude, longitude, page){
     get(child(rdbRef, `events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let result = []
@@ -16,7 +16,7 @@ export function recomend(res, user, latitude, longitude){
                 }
             })
             
-            sortByLocation(result, latitude, longitude, res)
+            sortByLocation(result, latitude, longitude, res, page)
         }
         
     })
@@ -30,7 +30,7 @@ function findCommonElements(arr1, arr2) {
     }
 }
 
-function sortByLocation(events, lat, lon, res){
+function sortByLocation(events, lat, lon, res, page){
     try {
 
         events.forEach(element => {
@@ -44,7 +44,7 @@ function sortByLocation(events, lat, lon, res){
         })
         emptyList(events)
 
-        returnRecomendations(res, events)
+        returnRecomendations(res, events, page)
     } catch (error) {
         return "xd"
     }
@@ -77,9 +77,27 @@ function emptyList(events){
     })
 }
 
-function returnRecomendations(res, result){
+function makeJSON(page, result){
+    var pagedEvents
+    if(page == null){
+        if(result.length<20){
+            pagedEvents = result.slice(0, result.length-1)
+        }
+        pagedEvents = result.slice(0,19)
+    }
+    else{
+        if(result.length<(page*10)+20){
+            pagedEvents = result.slice(page*10, result.length-1)
+        }
+        pagedEvents = result.slice(page*10, (page*10)+19)
+    }
+    return pagedEvents
+}
+
+function returnRecomendations(res, result, page){
     try {
-        var response = {"count": result.length, "items":result}
+        var pagedResult = makeJSON(page, result)
+        var response = {"count": pagedResult.length, "items":pagedResult}
         res.json(response)
       } catch (error) {
         return "no se pudo enviar"

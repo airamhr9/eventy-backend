@@ -24,11 +24,12 @@ app.get('/recomend', (req, res) =>{
     let userId = req.query.userId
     let lat = req.query.latitude
     let lon = req.query.longitude
+    let page = req.query.page
 
-    recomendation(userId, lat, lon)
-    async function recomendation(id, latitude, longitude){
+    recomendation(userId, lat, lon, page)
+    async function recomendation(id, latitude, longitude, pag){
         await getUser(id, false)
-        recomend(res, user, latitude, longitude)
+        recomend(res, user, latitude, longitude, pag)
     }
 })
 
