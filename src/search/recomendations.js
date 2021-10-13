@@ -3,7 +3,7 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
-export function recomend(res, user){
+export function recomend(res, user, latitude, longitude){
     get(child(rdbRef, `events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let result = []
@@ -16,7 +16,7 @@ export function recomend(res, user){
                 }
             })
             
-            sortByLocation(result, user.location, res)
+            sortByLocation(result, latitude, longitude, res)
         }
         
     })
@@ -30,13 +30,12 @@ function findCommonElements(arr1, arr2) {
     }
 }
 
-function sortByLocation(events, userLoc, res){
+function sortByLocation(events, lat, lon, res){
     try {
-        var [latU, longU] = userLoc.split(", ")
 
         events.forEach(element => {
             var [latE, longE] = element.location.split(", ")
-            var dist = distance(latU, longU, latE, longE, "K")
+            var dist = distance(lat, lon, latE, longE, "K")
             element.distance = dist.toFixed(2)
         })
 

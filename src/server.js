@@ -21,10 +21,14 @@ app.get('/search', (req, res) =>{
 })
 
 app.get('/recomend', (req, res) =>{
-    recomendation()
-    async function recomendation(){
-        await getUser(0, false)
-        recomend(res, user)
+    let userId = req.query.userId
+    let lat = req.query.latitude
+    let lon = req.query.longitude
+
+    recomendation(userId, lat, lon)
+    async function recomendation(id, latitude, longitude){
+        await getUser(id, false)
+        recomend(res, user, latitude, longitude)
     }
 })
 
