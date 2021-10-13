@@ -79,7 +79,8 @@ function emptyList(events){
 
 function returnRecomendations(res, result){
     try {
-        res.send(result)
+        var response = {"count": result.length, "items":result}
+        res.json(response)
       } catch (error) {
         return "no se pudo enviar"
       }
