@@ -5,24 +5,21 @@ import { DatabaseManager } from '../database/databaseManager.js'
 const app = express()
 const dbm = new DatabaseManager
 
-app.use(express.json)
 
-app.post('/publish', function (req, res){ 
-    const newEvent = new Event( req.body.description, 
-                                req.body.finishDate, 
-                                req.body.images, 
-                                req.body.location, 
-                                req.body.maxParticipants, 
-                                req.body.name, 
-                                req.body.owner, 
-                                req.body.price, 
-                                req.body.private, 
-                                req.body.startDate,
-                                req.body.summary,
-                                req.body.tags,)
+export function publishEvent(description, finishDate, images, location, maxParticipants, name, owner, price, private, startDate, summary, tags){ 
+    const newEvent = new Event( description, 
+                                finishDate, 
+                                images, 
+                                location, 
+                                maxParticipants, 
+                                name, 
+                                owner, 
+                                price, 
+                                private, 
+                                startDate,
+                                summary,
+                                tags,)
 
         dbm.uploadEvent(newEvent)
-        
-        res.status(Boolean.True).send()
-
-    })
+        return true
+    }

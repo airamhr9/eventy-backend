@@ -1,4 +1,4 @@
-import { ref, push } from "firebase/database"
+import { ref, push, get, update, child } from "firebase/database"
 import { rdb } from '../index.js'
 import { Event } from '../objects/event.js'
 
@@ -24,4 +24,22 @@ export class DatabaseManager {
             community : eventToUpload.getCommunity()
         } )
     }
+
+    addParticipantToEvent(eventId, userId){
+        const rdbRef = ref(rdb)
+        get(child(rdbRef,`events/${eventId}/participants`)).then((snapshot) => {
+            if(snapshot.exists()){ 
+                var newParticipants = (snapshot.val()).concat(userId)
+                update(ref(rdb, `events/${eventId}`),{
+                    participants : newParticipants
+                })
+                
+                return Boolean(true)
+            }
+            else{ return Boolean(false)} }).catch((error) => {
+                console.error(error)
+            })
+        
+    }
+
 }
