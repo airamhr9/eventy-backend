@@ -19,7 +19,7 @@ export class Event {
     
     addTags(tags) {this.tags.concat(tags)} 
 
-    addParticipants( participants ) {this.participants.concat(participants)} 
+    addParticipants( newParticipant ) {this.participants.concat(newParticipant)} 
 
     //Getters
 
