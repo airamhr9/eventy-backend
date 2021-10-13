@@ -6,7 +6,7 @@ const app = express()
 const dbm = new DatabaseManager
 
 
-export function publishEvent(description, finishDate, images, location, maxParticipants, name, owner, price, private, startDate, summary, tags, res){ 
+export function publishEvent(description, finishDate, images, location, maxParticipants, name, owner, price, private, startDate, summary, tags){ 
     const newEvent = new Event( description, 
                                 finishDate, 
                                 images, 
@@ -21,6 +21,5 @@ export function publishEvent(description, finishDate, images, location, maxParti
                                 tags,)
 
         dbm.uploadEvent(newEvent)
-        
-        res.send(Boolean.True)
+        return true
     }

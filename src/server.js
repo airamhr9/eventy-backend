@@ -7,6 +7,8 @@ import { getUserPreferences, setUserPreferences } from './users/userPreferences.
 import { getUser, updateUser, user } from './users/userProfile.js'
 import { createCommunity } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants } from './events/participants.js'
+import { publishEvent } from './events/publish.js'
+import { joinEvent } from './events/joinEvent.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -31,6 +33,19 @@ app.get('/recomend', (req, res) =>{
     async function recomendation(id, latitude, longitude, pag){
         await getUser(id, false)
         recomend(res, user, latitude, longitude, pag)
+    }
+})
+
+app.get('/publish', (req,res) => {
+    if(publishEvent(req.body.description, req.body.finishDate, req.body.images, req.body.location, req.body.maxParticipants, req.body.name, req.body.owner,
+        req.body.price, req.body.private, req.body.startDate, req.body.summary, req.body.tags) == Boolean(True)){
+            res.send(Boolean(True))
+        }
+}) 
+
+app.get('/joinEvent', (req,res) => {
+    if(joinEvent(req.body.eventId, req.body.userId) == Boolean(True)){
+        res.send(Boolean(True))
     }
 })
 
@@ -61,6 +76,7 @@ app.get('/events', async (req, res) => {
         res.send(event)
     }
 })
+//publishEvent(description, finishDate, images, location, maxParticipants, name, owner, price, private, startDate, summary, tags, res)
 
 app.put('/communities', (req, res) => {
     createCommunity(req.body, res)
