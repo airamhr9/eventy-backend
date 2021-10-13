@@ -42,6 +42,7 @@ function sortByLocation(events, lat, lon, res){
         events.sort(function(a, b){
             return parseFloat(a.distance) - parseFloat(b.distance)
         })
+        emptyList(events)
 
         returnRecomendations(res, events)
     } catch (error) {
@@ -66,6 +67,14 @@ function distance(lat1, long1, lat2, long2, unit){
 
     return dist
     
+}
+
+function emptyList(events){
+    events.forEach(element => {
+        if(element.participants == null){
+            element.participants = []
+        }
+    })
 }
 
 function returnRecomendations(res, result){
