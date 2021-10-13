@@ -1,13 +1,9 @@
 import { child, get, ref } from '@firebase/database'
 import { rdb } from '../index.js'
-import { getUserPreferences } from '../users/userPreferences.js'
-import { getUser } from '../users/userProfile.js'
 
 const rdbRef = ref(rdb)
 
-
-
-export function recomend(res, user){
+export function recomend(res, user, latitude, longitude, page){
     get(child(rdbRef, `events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let result = []
@@ -20,7 +16,7 @@ export function recomend(res, user){
                 }
             })
             
-            sortByLocation(result, user.location, res)
+            sortByLocation(result, latitude, longitude, res, page)
         }
         
     })
@@ -34,21 +30,21 @@ function findCommonElements(arr1, arr2) {
     }
 }
 
-function sortByLocation(events, userLoc, res){
+function sortByLocation(events, lat, lon, res, page){
     try {
-        var [latU, longU] = userLoc.split(", ")
 
         events.forEach(element => {
             var [latE, longE] = element.location.split(", ")
-            var dist = distance(latU, longU, latE, longE, "K")
+            var dist = distance(parseFloat(lat), parseFloat(lon), latE, longE, "K")
             element.distance = dist.toFixed(2)
         })
 
         events.sort(function(a, b){
             return parseFloat(a.distance) - parseFloat(b.distance)
         })
+        emptyList(events)
 
-        returnRecomendations(res, events)
+        returnRecomendations(res, events, page)
     } catch (error) {
         return "xd"
     }
@@ -73,9 +69,36 @@ function distance(lat1, long1, lat2, long2, unit){
     
 }
 
-function returnRecomendations(res, result){
+function emptyList(events){
+    events.forEach(element => {
+        if(element.participants == null){
+            element.participants = []
+        }
+    })
+}
+
+function makeJSON(page, result){
+    var pagedEvents
+    if(page == null){
+        if(result.length<20){
+            pagedEvents = result.slice(0, result.length-1)
+        }
+        pagedEvents = result.slice(0,19)
+    }
+    else{
+        if(result.length<(page*10)+20){
+            pagedEvents = result.slice(page*10, result.length-1)
+        }
+        pagedEvents = result.slice(page*10, (page*10)+19)
+    }
+    return pagedEvents
+}
+
+function returnRecomendations(res, result, page){
     try {
-        res.send(result)
+        var pagedResult = makeJSON(page, result)
+        var response = {"count": pagedResult.length, "items":pagedResult}
+        res.json(response)
       } catch (error) {
         return "no se pudo enviar"
       }
