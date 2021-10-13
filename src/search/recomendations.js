@@ -1,11 +1,7 @@
 import { child, get, ref } from '@firebase/database'
 import { rdb } from '../index.js'
-import { getUserPreferences } from '../users/userPreferences.js'
-import { getUser } from '../users/userProfile.js'
 
 const rdbRef = ref(rdb)
-
-
 
 export function recomend(res, user){
     get(child(rdbRef, `events/`)).then((snapshot) => {
