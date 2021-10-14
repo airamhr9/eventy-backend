@@ -9,6 +9,7 @@ import { createCommunity } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
+import { login } from './events/login.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -45,6 +46,12 @@ app.get('/publish', (req,res) => {
 
 app.get('/joinEvent', (req,res) => {
     if(joinEvent(req.body.eventId, req.body.userId) == Boolean(True)){
+        res.send(Boolean(True))
+    }
+})
+
+app.get('/login', (req,res) => {
+    if(login(req.body.userId, req.body.password) == Boolean(True)){
         res.send(Boolean(True))
     }
 })
