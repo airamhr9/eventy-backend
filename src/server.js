@@ -21,7 +21,9 @@ app.get('/tags', (req, res) => {
 })
 
 app.get('/search', (req, res) =>{
-    search("de", ["Museos"], res)
+    let txt = req.query.text
+    let tags = req.query.tags
+    search(txt, tags, res)
 })
 
 app.get('/recomend', (req, res) =>{
