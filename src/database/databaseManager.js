@@ -1,7 +1,6 @@
 import { ref, push, get, update, child } from "firebase/database"
 import { rdb } from '../index.js'
 import { Event } from '../objects/event.js'
-import { User } from '../'
 
 const rdbRef = ref(rdb)
 

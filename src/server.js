@@ -9,7 +9,7 @@ import { createCommunity } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
-import { login } from './events/login.js'
+import { login } from './users/login.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -85,7 +85,6 @@ app.get('/events', async (req, res) => {
         res.send(event)
     }
 })
-//publishEvent(description, finishDate, images, location, maxParticipants, name, owner, price, private, startDate, summary, tags, res)
 
 app.put('/communities', (req, res) => {
     createCommunity(req.body, res)
@@ -94,11 +93,3 @@ app.put('/communities', (req, res) => {
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`)
 })
-
-
-// Código de ejemplo
-/*async function prueba() {
-    await getUser(1, false)
-    console.log(user)
-}
-prueba()*/
