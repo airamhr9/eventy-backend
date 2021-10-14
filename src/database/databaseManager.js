@@ -1,6 +1,9 @@
 import { ref, push, get, update, child } from "firebase/database"
 import { rdb } from '../index.js'
 import { Event } from '../objects/event.js'
+import { User } from '../'
+
+const rdbRef = ref(rdb)
 
 
 export class DatabaseManager {
@@ -26,7 +29,6 @@ export class DatabaseManager {
     }
 
     addParticipantToEvent(eventId, userId){
-        const rdbRef = ref(rdb)
         get(child(rdbRef,`events/${eventId}/participants`)).then((snapshot) => {
             if(snapshot.exists()){ 
                 var newParticipants = (snapshot.val()).concat(userId)
@@ -42,4 +44,21 @@ export class DatabaseManager {
         
     }
 
+    getUserPasswordById(userName){
+        get(child(rdbRef, `users/`)).then((snapshot) => {
+            if(snapshot.exists()){
+                let users = snapshot.val()
+                users.forEach(element => {
+                    if(findCommonElements(element.username, UserName)){
+                        return element.password
+                    }
+                })
+            }else{
+                console.print("Error getting data from db")
+                return "Error getting data from db"
+            }
+            console.print("User doesn't exist")
+            return "User doesn't exist"
+        })
+    }
 }
