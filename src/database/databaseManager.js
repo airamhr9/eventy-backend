@@ -43,21 +43,18 @@ export class DatabaseManager {
         
     }
 
-    getUserPasswordById(userName){
-        get(child(rdbRef, `users/`)).then((snapshot) => {
+     async getUserPasswordByName(userName){
+        var res = "error"
+       await get(child(rdbRef, `users/`)).then((snapshot) => {
             if(snapshot.exists()){
                 let users = snapshot.val()
                 users.forEach(element => {
-                    if(findCommonElements(element.username, UserName)){
-                        return element.password
+                    if(element.username.toString() == userName.toString()){
+                        res = element.password
                     }
                 })
-            }else{
-                console.print("Error getting data from db")
-                return "Error getting data from db"
             }
-            console.print("User doesn't exist")
-            return "User doesn't exist"
         })
+        return res
     }
 }

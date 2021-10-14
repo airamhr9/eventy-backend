@@ -1,10 +1,12 @@
 import { DatabaseManager } from '../database/databaseManager.js'
 
+
 const dbm = new DatabaseManager
 
-//console.log(dbm.getUserPasswordById("antoniogabinete"))
-
-export function login(userId, password){ 
-        
-        return true
+export async function login(userName, password){ 
+    if(await dbm.getUserPasswordByName(userName) == password){
+        return "true"
+    }else{
+        return "false"
     }
+}
