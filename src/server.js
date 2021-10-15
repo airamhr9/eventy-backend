@@ -5,7 +5,7 @@ import { search } from './search/search.js'
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
-import { createCommunity } from './communities/community.js'
+import { createCommunity, getCommunityById, community } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
@@ -84,6 +84,11 @@ app.get('/events', async (req, res) => {
         await getEvent(req.query.id)
         res.send(event)
     }
+})
+
+app.get('/communities', async (req, res) => {
+    await getCommunityById(req.query.id)
+    res.send(community)
 })
 
 app.put('/communities', (req, res) => {

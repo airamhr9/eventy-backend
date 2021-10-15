@@ -3,6 +3,20 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
+export let community
+
+export async function getCommunityById(communityId) {
+    await get(child(rdbRef, `communities/${communityId}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+            community = snapshot.val()
+        } else {
+            community = 'Community does not exist'
+        }
+        }).catch((error) => {
+            console.error(error)
+    });
+}
+
 export async function createCommunity(community, res) {
     await generateCommunityId()
     set(ref(rdb, `communities/${nextCommunityId}`), {
