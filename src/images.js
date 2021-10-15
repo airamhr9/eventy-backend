@@ -16,7 +16,7 @@ export let objectWithURLs
 export async function replaceImagesWithURL_Event(event) {
     let imagesURLs = []
     for (let image of event.images) {
-        await getFileURL(image)            
+        await getFileURL(`images/events/${image}`)            
         imagesURLs.push(fileURL)
     }
     event.images = imagesURLs
@@ -24,7 +24,7 @@ export async function replaceImagesWithURL_Event(event) {
 }
 
 export async function replaceImagesWithURL_User(user) {
-    await getFileURL(user.image)
+    await getFileURL(`images/users/${user.image}`)
     user.image = fileURL
     objectWithURLs = user
 }
@@ -32,11 +32,11 @@ export async function replaceImagesWithURL_User(user) {
 export async function replaceImagesWithURL_Community(community) {
     let imagesURLs = []
     for (let image of community.images) {
-        await getFileURL(image)            
+        await getFileURL(`images/communities/${image}`)            
         imagesURLs.push(fileURL)
     }
     community.images = imagesURLs
-    await getFileURL(community.logo)
+    await getFileURL(`images/communities/${community.logo}`)
     community.logo = fileURL
     objectWithURLs = community
 }
