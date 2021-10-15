@@ -1,5 +1,6 @@
 import { child, get, ref } from '@firebase/database'
 import { rdb } from '../index.js'
+import { replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
@@ -37,8 +38,13 @@ function findCommonElements(arr1, arr2) {
   }
 }
 
-function returnEvents(res, result){
+async function returnEvents(res, events){
   try {
+    let result = []
+    for (let ev of events) {
+      await replaceImagesWithURL_Event(ev)
+      result.push(objectWithURLs)
+    }
     res.send(result)
   } catch (error) {
     return "no se pudo enviar"

@@ -10,6 +10,8 @@ import { getEvent, event, getEventParticipants, eventParticipants } from './even
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
+import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
+    objectWithURLs } from './images.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -58,16 +60,18 @@ app.get('/login', (req,res) => {
     }
 })
 
-app.get('/users', (req, res) => {
-    if (req.query.preferences == 'true') { // No borrar el " == 'true' "
+app.get('/users', async (req, res) => {
+    if (req.query.preferences == 'true') {
         getUserPreferences(res, req.query.id)
     } else {
-        getUser(req.query.id, true, res)
+        await getUser(req.query.id)
+        await replaceImagesWithURL_User(user)
+        res.send(objectWithURLs)
     }
 })
 
 app.post('/users', (req, res) => {
-    if (req.query.preferences == 'true') { // No borrar el " == 'true' "
+    if (req.query.preferences == 'true') {
         setUserPreferences(req.query.id, req.body)
         res.send()
     } else {
@@ -79,20 +83,32 @@ app.post('/users', (req, res) => {
 app.get('/events', async (req, res) => {
     if (req.query.participants == 'true') { 
         await getEventParticipants(req.query.id)
-        res.send(eventParticipants)
+        let result = []
+        for (let usr of eventParticipants) {
+            await replaceImagesWithURL_User(usr)
+            result.push(objectWithURLs)
+        }
+        res.send(result)
     } else {
         await getEvent(req.query.id)
-        res.send(event)
+        await replaceImagesWithURL_Event(event)
+        res.send(objectWithURLs)
     }
 })
 
 app.get('/communities', async (req, res) => {
     if (req.query.user != undefined) {
         await listUserCommunities(parseInt(req.query.user))
-        res.send(userCommunities)
+        let result = []
+        for (let com of userCommunities) {
+            await replaceImagesWithURL_Community(com)
+            result.push(objectWithURLs)
+        }
+        res.send(result)
     } else if (req.query.id != undefined) {
         await getCommunityById(req.query.id)
-        res.send(community)
+        await replaceImagesWithURL_Community(community)
+        res.send(objectWithURLs)
     } else {
         res.send('Not supported')
     }

@@ -5,15 +5,12 @@ const rdbRef = ref(rdb)
 
 export let user
 
-export async function getUser(userId, sendResponse, res) {
+export async function getUser(userId) {
     await get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
         if (snapshot.exists()) {
             user = snapshot.val()
         } else {
             user = 'User does not exist'
-        }
-        if (sendResponse) {
-            res.send(user)
         }
         }).catch((error) => {
             console.error(error)

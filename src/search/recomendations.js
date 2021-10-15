@@ -1,5 +1,6 @@
 import { child, get, ref } from '@firebase/database'
 import { rdb } from '../index.js'
+import { replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
@@ -94,12 +95,17 @@ function makeJSON(page, result){
     return pagedEvents
 }
 
-function returnRecomendations(res, result, page){
+async function returnRecomendations(res, events, page){
     try {
+        let result = []
+        for (let ev of events) {
+            await replaceImagesWithURL_Event(ev)
+            result.push(objectWithURLs)
+        }
         var pagedResult = makeJSON(page, result)
         var response = {"count": pagedResult.length, "items":pagedResult}
         res.json(response)
-      } catch (error) {
+    } catch (error) {
         return "no se pudo enviar"
-      }
+    }
 }
