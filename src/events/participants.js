@@ -21,6 +21,9 @@ export async function getEvent(eventId) {
     await get(child(rdbRef, `events/${eventId}`)).then((snapshot) => {
         if (snapshot.exists()) {
             event = snapshot.val()
+            if (event.participants == undefined) {
+                event.participants = []
+            }
         } else {
             event = null
         }
