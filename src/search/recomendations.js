@@ -35,7 +35,8 @@ function sortByLocation(events, lat, lon, res, page){
     try {
 
         events.forEach(element => {
-            var [latE, longE] = element.location.split(", ")
+            var latE = element.latitude
+            var longE = element.longitude
             var dist = distance(parseFloat(lat), parseFloat(lon), latE, longE, "K")
             element.distance = dist.toFixed(2)
         })

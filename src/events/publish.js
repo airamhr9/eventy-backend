@@ -4,11 +4,13 @@ import { DatabaseManager } from '../database/databaseManager.js'
 const dbm = new DatabaseManager
 
 
-export function publishEvent(description, finishDate, images, location, maxParticipants, name, owner, price, isPrivate, startDate, summary, tags){ 
+export function publishEvent(description, finishDate, images, latitude, longitude, maxParticipants, name, owner,
+    price, isPrivate, startDate, summary, tags) { 
     const newEvent = new Event( description, 
                                 finishDate, 
                                 images, 
-                                location, 
+                                latitude,
+                                longitude, 
                                 maxParticipants, 
                                 name, 
                                 owner, 
@@ -16,7 +18,7 @@ export function publishEvent(description, finishDate, images, location, maxParti
                                 isPrivate, 
                                 startDate,
                                 summary,
-                                tags,)
+                                tags)
 
         dbm.uploadEvent(newEvent)
         return true

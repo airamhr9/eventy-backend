@@ -1,10 +1,12 @@
 export class Event {
 
-    constructor(descripcion, finishDate, images, location, maxParticipants, name, owner, price, isPrivate, startDate, summary, tags, ){
+    constructor(descripcion, finishDate, images, latitude, longitude, maxParticipants, name, owner, price,
+        isPrivate,startDate, summary, tags,) {
         this.descripcion = descripcion
         this.finishDate = finishDate
         this.images = images
-        this.location = location
+        this.latitude = latitude
+        this.longitude = longitude
         this.maxParticipants = maxParticipants
         this.name = name
         this.owner = owner
@@ -29,7 +31,9 @@ export class Event {
 
     getImages(){return this.images}
 
-    getLocation(){return this.location}
+    getLatitude() { return this.latitude }
+
+    getLongitude() { return this.longitude }
 
     getMaxParticipants(){return this.maxParticipants}
 
@@ -60,7 +64,9 @@ export class Event {
 
     setImages(images){this.images = images}
 
-    setLocation(location){this.location = location}
+    setLatitude(latitude) { this.latitude = latitude }
+
+    setLongitude(longitude) { this.longitude = longitude }
 
     setMaxParticipants(maxParticipants){this.maxParticipants = maxParticipants}
 
