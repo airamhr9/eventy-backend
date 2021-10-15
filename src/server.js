@@ -5,7 +5,7 @@ import { search } from './search/search.js'
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
-import { createCommunity, getCommunityById, community } from './communities/community.js'
+import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
@@ -87,8 +87,15 @@ app.get('/events', async (req, res) => {
 })
 
 app.get('/communities', async (req, res) => {
-    await getCommunityById(req.query.id)
-    res.send(community)
+    if (req.query.user != undefined) {
+        await listUserCommunities(parseInt(req.query.user))
+        res.send(userCommunities)
+    } else if (req.query.id != undefined) {
+        await getCommunityById(req.query.id)
+        res.send(community)
+    } else {
+        res.send('Not supported')
+    }
 })
 
 app.put('/communities', (req, res) => {

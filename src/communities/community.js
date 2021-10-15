@@ -1,5 +1,6 @@
 import { child, get, ref, set } from '@firebase/database'
 import { rdb } from '../index.js'
+import { getUser, user } from '../users/userProfile.js'
 
 const rdbRef = ref(rdb)
 
@@ -15,6 +16,33 @@ export async function getCommunityById(communityId) {
         }).catch((error) => {
             console.error(error)
     });
+}
+
+let allCommunities
+
+async function getCommunities() {
+    await get(child(rdbRef, 'communities/')).then((snapshot) => {
+        if (snapshot.exists()) {
+            allCommunities = snapshot.val()
+        } else {
+            allCommunities = []
+        }
+        }).catch((error) => {
+            console.error(error)
+    });
+}
+
+export let userCommunities
+
+export async function listUserCommunities(userId) {
+    await getCommunities()
+    userCommunities = []
+    for (let com of allCommunities) {
+        if (com.creator == userId || (com.members != undefined && com.members.includes(userId))) {
+            await getUser(userId)
+            userCommunities.push(com)
+        }
+    }
 }
 
 export async function createCommunity(community, res) {
