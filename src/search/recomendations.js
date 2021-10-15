@@ -12,9 +12,13 @@ export function recomend(res, user, latitude, longitude, page){
             let pref = user.preferences
 
             events.forEach(element => {
+                if (element.participants == undefined) {
+                    element.participants = []
+                }
+
                 if(findCommonElements(element.tags, pref)){
                     result.push(element)
-                }
+                }                
             })
             
             sortByLocation(result, latitude, longitude, res, page)

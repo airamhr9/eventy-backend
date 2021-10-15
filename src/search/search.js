@@ -11,6 +11,10 @@ export function search(searchText, searchTags, res){
         let events = snapshot.val()
 
         events.forEach(element => {
+          if (element.participants == undefined) {
+            element.participants = []
+          }
+
           let names = makeLowerCase(element.name)
           let tags = element.tags
 
