@@ -74,7 +74,7 @@ app.get('/users', async (req, res) => {
     }
 })
 
-app.post('/users', (req, res) => {
+app.put('/users', (req, res) => {
     if (req.query.preferences != undefined) {
         setUserPreferences(req.query.id, req.body)
         res.send()
@@ -118,7 +118,7 @@ app.get('/communities', async (req, res) => {
     }
 })
 
-app.put('/communities', (req, res) => {
+app.post('/communities', (req, res) => {
     createCommunity(req.body, res)
 })
 
