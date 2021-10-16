@@ -31,3 +31,34 @@ export async function getEvent(eventId) {
             console.error(error)
     });
 }
+
+let allEvents
+
+async function getEvents() {
+    await get(child(rdbRef, 'events/')).then((snapshot) => {
+        if (snapshot.exists()) {
+            allEvents = snapshot.val()
+        } else {
+            allEvents = []
+        }
+        }).catch((error) => {
+            console.error(error)
+    });
+}
+
+export let userOlderEvents
+
+export async function listUserOlderEvents(userId) {
+    await getEvents()
+    userOlderEvents = []
+    for (let ev of allEvents) {
+        let [date, time] = ev.startDate.split(' ')
+        let [day, month, year] = date.split('/')
+        let [hour, minutes] = time.split(':')
+        /*if ((ev.owner == userId || (ev.participants != undefined && ev.participants.includes(userId)))
+            && new Date(year, month, day, hour, minutes, 0) < new Date()) {
+            userOlderEvents.push(ev)
+        }*/ 
+        // NO FUNCIONA
+    }
+}

@@ -6,7 +6,7 @@ import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
 import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities } from './communities/community.js'
-import { getEvent, event, getEventParticipants, eventParticipants } from './events/participants.js'
+import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
@@ -62,8 +62,11 @@ app.get('/login', (req,res) => {
 })
 
 app.get('/users', async (req, res) => {
-    if (req.query.preferences == 'true') {
+    if (req.query.preferences != undefined) {
         getUserPreferences(res, req.query.id)
+    } else if (req.query.olderEvents != undefined) {
+        await listUserOlderEvents(req.query.id)
+        res.send(userOlderEvents)
     } else {
         await getUser(req.query.id)
         await replaceImagesWithURL_User(user)
@@ -72,7 +75,7 @@ app.get('/users', async (req, res) => {
 })
 
 app.post('/users', (req, res) => {
-    if (req.query.preferences == 'true') {
+    if (req.query.preferences != undefined) {
         setUserPreferences(req.query.id, req.body)
         res.send()
     } else {
@@ -82,7 +85,7 @@ app.post('/users', (req, res) => {
 })
 
 app.get('/events', async (req, res) => {
-    if (req.query.participants == 'true') { 
+    if (req.query.participants != undefined) { 
         await getEventParticipants(req.query.id)
         let result = []
         for (let usr of eventParticipants) {
