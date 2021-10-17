@@ -1,4 +1,4 @@
-import { ref, getDownloadURL } from "firebase/storage"
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage"
 import { storage } from "./index.js";
 
 export let fileURL
@@ -39,4 +39,17 @@ export async function replaceImagesWithURL_Community(community) {
     await getFileURL(`images/communities/${community.logo}`)
     community.logo = fileURL
     objectWithURLs = community
+}
+
+export function uploadImage(file, path) {
+    let extension = path.split('.')
+    extension = extension[extension.length - 1]
+    uploadFile(file, `images/${path}`, `image/${extension}`)
+}
+
+function uploadFile(file, path, contentType) {
+    let metadata = {
+        contentType: contentType,
+    }
+    uploadBytes(ref(storage, path), file, metadata)
 }

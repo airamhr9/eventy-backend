@@ -11,7 +11,7 @@ import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
-    objectWithURLs } from './images.js'
+    objectWithURLs, uploadImage } from './images.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -66,7 +66,12 @@ app.get('/users', async (req, res) => {
         getUserPreferences(res, req.query.id)
     } else if (req.query.olderEvents != undefined) {
         await listUserOlderEvents(req.query.id)
-        res.send(userOlderEvents)
+        let result = []
+        for (let ev of userOlderEvents) {
+            await replaceImagesWithURL_Event(ev)
+            result.push(objectWithURLs)
+        }
+        res.send(result)
     } else {
         await getUser(req.query.id)
         await replaceImagesWithURL_User(user)
@@ -120,6 +125,20 @@ app.get('/communities', async (req, res) => {
 
 app.post('/communities', (req, res) => {
     createCommunity(req.body, res)
+})
+
+// NO FUNCIONA
+app.post('/images', (req, res) => {    
+    console.log(req.body) // Imprime "undefined"
+
+    if (req.params.type == 'user') {
+        uploadImage(req.body, `users/${req.query.name}`)
+    } else if (req.params.type == 'event') {
+        uploadImage(req.body, `events/${req.query.name}`)
+    } else {
+        uploadImage(req.body, `communities/${req.query.name}`)
+    }    
+    res.send()
 })
 
 app.listen(port, () => {
