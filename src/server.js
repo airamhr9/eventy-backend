@@ -1,6 +1,7 @@
 import express from 'express'
-
 import multer from 'multer'
+import { readFile, unlink } from 'fs'
+
 import { recomend } from './search/recomendations.js'
 import { search } from './search/search.js'
 import { getTags } from './tags.js'
@@ -129,17 +130,17 @@ app.post('/communities', (req, res) => {
     createCommunity(req.body, res)
 })
 
-// NO FUNCIONA
-app.post('/images', upload.single('photo'), (req, res) => {    
-    console.log(req.file) // Imprime "undefined"
-
-    if (req.params.type == 'user') {
-        uploadImage(req.body, `users/${req.query.name}`)
-    } else if (req.params.type == 'event') {
-        uploadImage(req.file, `events/${req.query.name}`)
-    } else {
-        uploadImage(req.body, `communities/${req.query.name}`)
-    }    
+app.post('/images', upload.single('photo'), (req, res) => {
+    readFile(req.file.path, (err, data) => {
+        if (req.query.type == 'user') {
+            uploadImage(data, `users/${req.query.name}`)
+        } else if (req.query.type == 'event') {
+            uploadImage(data, `events/${req.query.name}`)
+        } else {
+            uploadImage(data, `communities/${req.query.name}`)
+        }
+    })
+    unlink(req.file.path, (err) => {})
     res.send()
 })
 
