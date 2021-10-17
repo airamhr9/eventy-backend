@@ -1,5 +1,6 @@
 import express from 'express'
 
+import multer from 'multer'
 import { recomend } from './search/recomendations.js'
 import { search } from './search/search.js'
 import { getTags } from './tags.js'
@@ -15,6 +16,8 @@ import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWit
 
 const app = express()
 const port = process.argv[2] || 8000
+
+const upload = multer({ dest: 'uploads/' })
 
 app.use(express.json())
 
@@ -127,13 +130,13 @@ app.post('/communities', (req, res) => {
 })
 
 // NO FUNCIONA
-app.post('/images', (req, res) => {    
-    console.log(req.body) // Imprime "undefined"
+app.post('/images', upload.single('photo'), (req, res) => {    
+    console.log(req.file) // Imprime "undefined"
 
     if (req.params.type == 'user') {
         uploadImage(req.body, `users/${req.query.name}`)
     } else if (req.params.type == 'event') {
-        uploadImage(req.body, `events/${req.query.name}`)
+        uploadImage(req.file, `events/${req.query.name}`)
     } else {
         uploadImage(req.body, `communities/${req.query.name}`)
     }    
