@@ -1,4 +1,4 @@
-import { ref, push, get, update, child } from "firebase/database"
+import { ref, set, get, update, child } from "firebase/database"
 import { rdb } from '../index.js'
 import { Event } from '../objects/event.js'
 
@@ -9,9 +9,10 @@ export class DatabaseManager {
     uploadEvent(eventToUpload){
         eventToUpload instanceof Event
 
-        push(ref(rdb,'events/'),{
+        set(ref(rdb,`events/${eventToUpload.getId()}`),{
             description : eventToUpload.getDescription(),
             finishDate : eventToUpload.getFinishDate(),
+            id : eventToUpload.getId(),
             images : eventToUpload.getImages(),
             latitude : eventToUpload.getLatitude(),
             longitude : eventToUpload.getLongitude(),

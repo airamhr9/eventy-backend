@@ -1,6 +1,5 @@
 import { child, get, ref, set } from '@firebase/database'
 import { rdb } from '../index.js'
-import { getUser, user } from '../users/userProfile.js'
 
 const rdbRef = ref(rdb)
 
@@ -39,7 +38,6 @@ export async function listUserCommunities(userId) {
     userCommunities = []
     for (let com of allCommunities) {
         if (com.creator == userId || (com.members != undefined && com.members.includes(userId))) {
-            await getUser(userId)
             userCommunities.push(com)
         }
     }

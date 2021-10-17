@@ -41,12 +41,27 @@ app.get('/recomend', (req, res) =>{
     }
 })
 
-app.get('/publish', (req,res) => {
-    if (publishEvent(req.body.description, req.body.finishDate, req.body.images, req.body.latitude, req.body.longitude,
-        req.body.maxParticipants, req.body.name, req.body.owner, req.body.price, req.body.private, req.body.startDate,
-        req.body.summary, req.body.tags) == Boolean(True)) {
-            res.send(Boolean(True))
+app.get('/events', async (req, res) => {
+    if (req.query.participants != undefined) { 
+        await getEventParticipants(req.query.id)
+        let result = []
+        for (let usr of eventParticipants) {
+            await replaceImagesWithURL_User(usr)
+            result.push(objectWithURLs)
         }
+        res.send(result)
+    } else {
+        await getEvent(req.query.id)
+        await replaceImagesWithURL_Event(event)
+        res.send(objectWithURLs)
+    }
+})
+
+app.post('/events', (req,res) => {
+    publishEvent(req.body.description, req.body.finishDate, req.body.images, req.body.latitude, req.body.longitude,
+        req.body.maxParticipants, req.body.name, req.body.owner, req.body.price, req.body.private, req.body.startDate,
+        req.body.summary, req.body.tags)
+    res.send()
 }) 
 
 app.get('/joinEvent', (req,res) => {
@@ -86,22 +101,6 @@ app.put('/users', (req, res) => {
     } else {
         updateUser(req.body)
         res.send()
-    }
-})
-
-app.get('/events', async (req, res) => {
-    if (req.query.participants != undefined) { 
-        await getEventParticipants(req.query.id)
-        let result = []
-        for (let usr of eventParticipants) {
-            await replaceImagesWithURL_User(usr)
-            result.push(objectWithURLs)
-        }
-        res.send(result)
-    } else {
-        await getEvent(req.query.id)
-        await replaceImagesWithURL_Event(event)
-        res.send(objectWithURLs)
     }
 })
 
