@@ -68,10 +68,9 @@ app.post('/events', (req,res) => {
     res.send()
 }) 
 
-app.get('/joinEvent', (req,res) => {
-    if(joinEvent(req.body.eventId, req.body.userId) == Boolean(True)){
-        res.send(Boolean(True))
-    }
+app.post('/joinEvent', (req, res) => {
+    joinEvent(req.query.eventId, parseInt(req.query.userId))
+    res.send()
 })
 
 app.get('/login', (req,res) => {
