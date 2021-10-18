@@ -4,8 +4,6 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 const auth = getAuth();
 
-register("prueba", "1234567", "prueba@prueba.com", "12/01/2000")
-
 export async function register(userName, userPassword, userMail, userBirthDate){
     await createUserWithEmailAndPassword(auth, userMail, userPassword).then((userCredential) => {
         set(ref(rdb,`users/${userName}`),{

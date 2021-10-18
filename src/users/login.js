@@ -3,7 +3,6 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 const auth = getAuth();
 
-console.log("empieza")
 console.log(login("prueba", "1234567"))
 
 export async function login(userName, password){ 
