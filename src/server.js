@@ -7,14 +7,14 @@ import { search } from './search/search.js'
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
-import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities } from './communities/community.js'
+import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities, joinCommunity
+    } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
     objectWithURLs, uploadImage } from './images.js'
-import { register } from './users/register.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -69,10 +69,14 @@ app.post('/events', (req,res) => {
     res.send()
 }) 
 
-app.put('/joinEvent', (req,res) => {
-    if(joinEvent(req.body.eventId, req.body.userId) == Boolean(True)){
-        res.send(Boolean(True))
-    }
+app.post('/joinEvent', (req, res) => {
+    joinEvent(req.query.eventId, parseInt(req.query.userId))
+    res.send()
+})
+
+app.post('/joinCommunity', (req, res) => {
+    joinCommunity(req.query.communityId, parseInt(req.query.userId))
+    res.send()
 })
 
 app.get('/login', (req,res) => {

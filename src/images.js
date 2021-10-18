@@ -7,7 +7,7 @@ export async function getFileURL(path) {
     await getDownloadURL(ref(storage, path)).then((url) => {
         fileURL = url
     }).catch((error) => {
-        fileURL = 'File does not exist'
+        fileURL = `File <${path}> does not exist`
     })
 }
 

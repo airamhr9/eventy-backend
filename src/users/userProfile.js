@@ -9,6 +9,9 @@ export async function getUser(userId) {
     await get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
         if (snapshot.exists()) {
             user = snapshot.val()
+            if (user.preferences == undefined) {
+                user.preferences = []
+            }
         } else {
             user = 'User does not exist'
         }
