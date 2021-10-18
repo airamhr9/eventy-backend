@@ -1,4 +1,4 @@
-import { child, get, ref, set } from '@firebase/database'
+import { child, get, ref, set, update } from '@firebase/database'
 import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
@@ -51,13 +51,12 @@ export async function createCommunity(community, res) {
         id: nextCommunityId,
         images: community.images,
         logo: community.logo,
-        members: [],
+        members: community.members,
         name: community.name,
         private: community.private,
         tags: community.tags
     }).then(() => {
         community.id = nextCommunityId
-        community.members = []
         res.send(community)
     })
 }
@@ -75,4 +74,10 @@ async function generateCommunityId() {
         }).catch((error) => {
             console.error(error)
     });
+}
+
+export async function joinCommunity(communityId, userId) {
+    await getCommunityById(communityId)
+    community.members.push(userId)
+    update(ref(rdb, `communities/${communityId}/`), community)
 }

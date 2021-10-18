@@ -29,23 +29,33 @@ export class DatabaseManager {
         } )
     }
 
-    addParticipantToEvent(eventId, userId){
-        get(child(rdbRef,`events/${eventId}/participants`)).then((snapshot) => {
-            if(snapshot.exists()){ 
-                var newParticipants = (snapshot.val()).concat(userId)
-                update(ref(rdb, `events/${eventId}`),{
-                    participants : newParticipants
-                })
-                
-                return Boolean(true)
+    addParticipantToEvent(eventId, userId) {
+        get(child(rdbRef,`events/${eventId}/`)).then((snapshot) => {
+            let event = snapshot.val() 
+            if (event.participants == undefined) {
+                event.participants = []
             }
-            else{ return Boolean(false)} }).catch((error) => {
-                console.error(error)
-            })
-        
+            event.participants.push(userId)
+            update(ref(rdb, `events/${eventId}/`), event)
+        }        
+    )}
+
+    async getUserPasswordByName(userName){
+        var res = "error"
+        await get(child(rdbRef, `users/`)).then((snapshot) => {
+            if(snapshot.exists()){
+                let users = snapshot.val()
+                users.forEach(element => {
+                    if(element.username.toString() == userName.toString()){
+                        res = element.password
+                    }
+                })
+            }
+        })
+        return res
     }
 
-     async getUserPasswordByName(userName){
+    async getUserPasswordByName(userName){
         var res = "error"
        await get(child(rdbRef, `users/`)).then((snapshot) => {
             if(snapshot.exists()){
@@ -59,4 +69,5 @@ export class DatabaseManager {
         })
         return res
     }
+
 }

@@ -7,7 +7,8 @@ import { search } from './search/search.js'
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
-import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities } from './communities/community.js'
+import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities, joinCommunity
+    } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
@@ -68,16 +69,24 @@ app.post('/events', (req,res) => {
     res.send()
 }) 
 
-app.get('/joinEvent', (req,res) => {
-    if(joinEvent(req.body.eventId, req.body.userId) == Boolean(True)){
+app.post('/joinEvent', (req, res) => {
+    joinEvent(req.query.eventId, parseInt(req.query.userId))
+    res.send()
+})
+
+app.post('/joinCommunity', (req, res) => {
+    joinCommunity(req.query.communityId, parseInt(req.query.userId))
+    res.send()
+})
+
+app.get('/login', (req,res) => {
+    if(login(req.body.userId, req.body.password) == Boolean(True)){ //a espera de firebase
         res.send(Boolean(True))
     }
 })
 
-app.get('/login', (req,res) => {
-    if(login(req.body.userId, req.body.password) == Boolean(True)){
-        res.send(Boolean(True))
-    }
+app.post('/register,', (req,res) => {
+    res.send(register(req.body.userName , req.body.userPassword, req.body.userMail, req.body.userBirthDate, res))
 })
 
 app.get('/users', async (req, res) => {

@@ -11,7 +11,7 @@ export async function getEventParticipants(eventId) {
     eventParticipants = []
     await getUser(event.owner)
     eventParticipants.push(user)
-    for (let userId in event.participants) {
+    for (let userId of event.participants) {
         await getUser(userId)
         eventParticipants.push(user)
     }
