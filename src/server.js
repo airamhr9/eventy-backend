@@ -14,6 +14,7 @@ import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
     objectWithURLs, uploadImage } from './images.js'
+import { register } from './users/register.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -68,16 +69,20 @@ app.post('/events', (req,res) => {
     res.send()
 }) 
 
-app.get('/joinEvent', (req,res) => {
+app.put('/joinEvent', (req,res) => {
     if(joinEvent(req.body.eventId, req.body.userId) == Boolean(True)){
         res.send(Boolean(True))
     }
 })
 
 app.get('/login', (req,res) => {
-    if(login(req.body.userId, req.body.password) == Boolean(True)){
+    if(login(req.body.userId, req.body.password) == Boolean(True)){ //a espera de firebase
         res.send(Boolean(True))
     }
+})
+
+app.post('/register,', (req,res) => {
+    res.send(register(req.body.userName , req.body.userPassword, req.body.userMail, req.body.userBirthDate, res))
 })
 
 app.get('/users', async (req, res) => {

@@ -44,19 +44,4 @@ export class DatabaseManager {
             })
         
     }
-
-     async getUserPasswordByName(userName){
-        var res = "error"
-       await get(child(rdbRef, `users/`)).then((snapshot) => {
-            if(snapshot.exists()){
-                let users = snapshot.val()
-                users.forEach(element => {
-                    if(element.username.toString() == userName.toString()){
-                        res = element.password
-                    }
-                })
-            }
-        })
-        return res
-    }
 }

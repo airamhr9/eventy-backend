@@ -6,7 +6,7 @@ import { getStorage } from "firebase/storage"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAWIQCv7tzqa0MojVSQ_VkHlwpVjrOFFLM",
+  apiKey: "AIzaSyCOestmxztidEGb4XJbzSzlvwZcg19ogtc",
   authDomain: "eventy-a8e4c.firebaseapp.com",
   databaseURL: "https://eventy-a8e4c-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "eventy-a8e4c",
