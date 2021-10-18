@@ -51,13 +51,12 @@ export async function createCommunity(community, res) {
         id: nextCommunityId,
         images: community.images,
         logo: community.logo,
-        members: [],
+        members: community.members,
         name: community.name,
         private: community.private,
         tags: community.tags
     }).then(() => {
         community.id = nextCommunityId
-        community.members = []
         res.send(community)
     })
 }
