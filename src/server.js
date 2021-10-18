@@ -7,7 +7,8 @@ import { search } from './search/search.js'
 import { getTags } from './tags.js'
 import { getUserPreferences, setUserPreferences } from './users/userPreferences.js'
 import { getUser, updateUser, user } from './users/userProfile.js'
-import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities } from './communities/community.js'
+import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities, joinCommunity
+    } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
@@ -70,6 +71,11 @@ app.post('/events', (req,res) => {
 
 app.post('/joinEvent', (req, res) => {
     joinEvent(req.query.eventId, parseInt(req.query.userId))
+    res.send()
+})
+
+app.post('/joinCommunity', (req, res) => {
+    joinCommunity(req.query.communityId, parseInt(req.query.userId))
     res.send()
 })
 
