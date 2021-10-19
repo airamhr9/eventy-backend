@@ -16,6 +16,7 @@ import { login } from './users/login.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
     objectWithURLs, uploadImage } from './images.js'
 import { eventChat, sendMssg } from './events/chat.js'
+import { unescape } from 'querystring'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -81,9 +82,7 @@ app.post('/joinCommunity', (req, res) => {
 })
 
 app.get('/login', (req,res) => {
-    if(login(req.body.userId, req.body.password) == Boolean(True)){ //a espera de firebase
-        res.send(Boolean(True))
-    }
+    res.send(login(userName,password))
 })
 
 app.post('/register,', (req,res) => {
