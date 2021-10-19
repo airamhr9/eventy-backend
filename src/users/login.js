@@ -13,16 +13,16 @@ export async function login(userName, password, res) {
                 signInWithEmailAndPassword(auth, user.email, password).then(_ => {
                     res.send(auth.currentUser.uid)
                 }).catch(_ => {
-                    res.send("error")
+                    res.send("Error")
                 })
             } else {
-                res.send("error")
+                res.send("Error: el usuario o la contraseña introducidos no son correctos")
             }
         } else {
-            res.send("error")
+            res.send("Error: el usuario introducido no existe")
         }
     }).catch((error) => {
         console.error(error)
-        res.send("error")
+        res.send("Error")
     })
 }
