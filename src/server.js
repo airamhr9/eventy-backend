@@ -93,7 +93,7 @@ app.get('/users', async (req, res) => {
     if (req.query.preferences != undefined) {
         getUserPreferences(res, req.query.id)
     } else if (req.query.olderEvents != undefined) {
-        await listUserOlderEvents(req.query.id)
+        await listUserOlderEvents(parseInt(req.query.id))
         let result = []
         for (let ev of userOlderEvents) {
             await replaceImagesWithURL_Event(ev)

@@ -49,14 +49,10 @@ export let userOlderEvents
 export async function listUserOlderEvents(userId) {
     await getEvents()
     userOlderEvents = []
+    let now = new Date().toISOString()
     for (let ev of allEvents) {
-        let [date, time] = ev.startDate.split(' ')
-        let [day, month, year] = date.split('/')
-        let [hour, minutes] = time.split(':')
-        /*if ((ev.owner == userId || (ev.participants != undefined && ev.participants.includes(userId)))
-            && new Date(year, month, day, hour, minutes, 0) < new Date()) {
+        if (ev.participants.includes(userId) && ev.finishDate.localeCompare(now) < 0) {
             userOlderEvents.push(ev)
-        }*/ 
-        // NO FUNCIONA
+        }
     }
 }
