@@ -1,9 +1,11 @@
-import { get, child } from 'firebase/database'
+import { get, child, ref } from 'firebase/database'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { rdb } from '../index.js'
 
 const auth = getAuth();
+const rdbRef = ref(rdb)
 
-console.log(login("prueba", "1234567"))
+// console.log(login("prueba", "1234567"))
 
 export async function login(userName, password){ 
     var email = ""
