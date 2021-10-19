@@ -1,5 +1,6 @@
 export class Message{
-    constructor(user, text, time){
+    constructor(id, user, text, time){
+        this.id = user,
         this.user = user,
         this.text = text,
         this.time = time

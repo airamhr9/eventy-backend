@@ -1,4 +1,4 @@
-import { get, ref, set, child } from '@firebase/database'
+import { get, ref, set, child, push } from '@firebase/database'
 import {rdb} from '../index.js'
 import {Message} from '../objects/message.js'
 
@@ -8,26 +8,51 @@ export function eventChat(res, eventId){
 
     const rdbRef = ref(rdb)
 
-    get(child(rdbRef, `events/${eventId}/messages`)).then((snapshot =>{
-        let mssgList = snapshot.val()
+    get(child(rdbRef, `events/${eventId}/messages/`)).then((snapshot =>{
+        let mssgList = snapToArray(snapshot)
         var allMssg = []
 
-        mssgList.forEach(element => {
-            var oneMssg = new Message(element.user, element.text, element.time)
-            allMssg.push(oneMssg)
-        })
+        for(var i = 0; i<mssgList.length;i++){
+            let aux = new Message(mssgList[i].id, mssgList[i].user, mssgList[i].text, mssgList[i].time)
+            allMssg.push(aux)
+        }
         sortMssgs(allMssg, res)
 
-    }))
+    })).catch((error) => {
+        console.error(error)
+    })
 
 }
 
-export function sendMssg(userId, text, eventId){
+function snapToArray(snapshot){
+    var returnArr = []
+
+    snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val()
+        item.key = childSnapshot.key
+
+        returnArr.push(item)
+    })
+
+    return returnArr
+}
+
+export function sendMssg(message, eventId, res){
+
     const refRdb = ref(rdb, `events/${eventId}/messages`)
+    
+    const newRef = push(refRdb)
+    const idKey = newRef.key
 
-    let mssg = Message(userId, text, Date.now())
+    set(newRef, {
+        id: idKey,
+        text: message.text,
+        user: message.user,
+        time: message.time
+    })
+    
 
-    set(refRdb, mssg)
+    res.send(message)
 }
 
 function sortMssgs(mssgs, res){

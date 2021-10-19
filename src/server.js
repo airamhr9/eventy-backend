@@ -15,7 +15,7 @@ import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
     objectWithURLs, uploadImage } from './images.js'
-import { eventChat } from './events/chat.js'
+import { eventChat, sendMssg } from './events/chat.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -136,14 +136,16 @@ app.get('/communities', async (req, res) => {
     }
 })
 
-app.get('/chat', (req, res) =>{
-    let event = req.query.eventId
-    eventChat(res, event)
-
-})
-
 app.post('/communities', (req, res) => {
     createCommunity(req.body, res)
+})
+
+app.get('/chat', (req, res) =>{
+    eventChat(res, req.query.eventId)
+})
+
+app.post('/chat', (req, res) =>{
+    sendMssg(req.body, req.query.eventId, res)
 })
 
 app.post('/images', upload.single('photo'), (req, res) => {
