@@ -9,8 +9,6 @@ export let eventParticipants
 export async function getEventParticipants(eventId) {
     await getEvent(eventId)
     eventParticipants = []
-    await getUser(event.owner)
-    eventParticipants.push(user)
     for (let userId of event.participants) {
         await getUser(userId)
         eventParticipants.push(user)

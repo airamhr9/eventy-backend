@@ -16,7 +16,7 @@ import { login } from './users/login.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
     objectWithURLs, uploadImage } from './images.js'
 import { eventChat, sendMssg } from './events/chat.js'
-import { unescape } from 'querystring'
+import { communityChat, sendMssgComm } from './communities/chatCommunity.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -145,6 +145,14 @@ app.get('/chat', (req, res) =>{
 
 app.post('/chat', (req, res) =>{
     sendMssg(req.body, req.query.eventId, res)
+})
+
+app.get('/chatComm', (req, res) =>{
+    communityChat(res, req.query.commId)
+})
+
+app.post('/chatComm', (req, res) =>{
+    sendMssgComm(req.body, req.query.commId, res)
 })
 
 app.post('/images', upload.single('photo'), (req, res) => {

@@ -11,7 +11,7 @@ export class Event {
         this.maxParticipants = maxParticipants
         this.name = name
         this.owner = owner
-        this.participants = []
+        this.participants = [owner]
         this.price = price
         this.isPrivate = isPrivate
         this.startDate = startDate

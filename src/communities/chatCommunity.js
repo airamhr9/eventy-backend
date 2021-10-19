@@ -4,11 +4,11 @@ import {Message} from '../objects/message.js'
 
 
 
-export function eventChat(res, eventId){
+export function communityChat(res, communityId){
 
     const rdbRef = ref(rdb)
 
-    get(child(rdbRef, `events/${eventId}/messages/`)).then((snapshot =>{
+    get(child(rdbRef, `communities/${communityId}/messages/`)).then((snapshot =>{
         let mssgList = snapToArray(snapshot)
         var allMssg = []
 
@@ -37,9 +37,9 @@ function snapToArray(snapshot){
     return returnArr
 }
 
-export function sendMssg(message, eventId, res){
+export function sendMssgComm(message, communityId, res){
 
-    const refRdb = ref(rdb, `events/${eventId}/messages/`)
+    const refRdb = ref(rdb, `communities/${communityId}/messages/`)
     
     const newRef = push(refRdb)
     const idKey = newRef.key
