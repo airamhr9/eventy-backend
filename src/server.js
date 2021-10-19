@@ -81,8 +81,8 @@ app.post('/joinCommunity', (req, res) => {
     res.send()
 })
 
-app.get('/login', (req,res) => {
-    res.send(login(req.query.username,req.query.password))
+app.get('/login', (req, res) => {
+    login(req.query.username, req.query.password, res)
 })
 
 app.post('/register,', (req,res) => {

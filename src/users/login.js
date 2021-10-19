@@ -2,25 +2,27 @@ import { get, child, ref } from 'firebase/database'
 import { rdb } from '../index.js'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
-
-
 const rdbRef = ref(rdb)
-const auth = getAuth();
+const auth = getAuth()
 
-export async function login(userName, password){
-    await get(child(rdbRef,`users/${userName}/`)).then((snapshot) => {
-        if(snapshot.exists()){
+export async function login(userName, password, res) {
+    await get(child(rdbRef, `users/${userName}/`)).then((snapshot) => {
+        if (snapshot.exists()) {
             let user = snapshot.val()
-            if(user.password == password){
-                signInWithEmailAndPassword(auth,user.email,password).then(_ => {
-                    return auth.currentUser.uid
-                  }).catch( _  => {
-                      return "error"
-                  })
+            if (user.password == password) {
+                signInWithEmailAndPassword(auth, user.email, password).then(_ => {
+                    res.send(auth.currentUser.uid)
+                }).catch(_ => {
+                    res.send("error")
+                })
+            } else {
+                res.send("error")
             }
+        } else {
+            res.send("error")
         }
     }).catch((error) => {
         console.error(error)
-        return "error"
+        res.send("error")
     })
 }
