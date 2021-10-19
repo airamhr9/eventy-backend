@@ -15,6 +15,7 @@ import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
     objectWithURLs, uploadImage } from './images.js'
+import { eventChat } from './events/chat.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -133,6 +134,12 @@ app.get('/communities', async (req, res) => {
     } else {
         res.send('Not supported')
     }
+})
+
+app.get('/chat', (req, res) =>{
+    let event = req.query.eventId
+    eventChat(res, event)
+
 })
 
 app.post('/communities', (req, res) => {
