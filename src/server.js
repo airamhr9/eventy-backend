@@ -82,11 +82,11 @@ app.post('/joinCommunity', (req, res) => {
 })
 
 app.get('/login', (req,res) => {
-    res.send(login(req.query.userName,req.query.password))
+    res.send(login(req.query.username,req.query.password))
 })
 
 app.post('/register,', (req,res) => {
-    res.send(register(req.query.userName , req.query.userPassword, req.query.userMail, req.query.userBirthDate, res))
+    res.send(register(req.query.username , req.query.password, req.query.email, req.query.birthdate, res))
 })
 
 app.get('/users', async (req, res) => {
