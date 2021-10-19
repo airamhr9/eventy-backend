@@ -13,7 +13,7 @@ export async function login(userName, password){
             let user = snapshot.val()
             if(user.password == password){
                 signInWithEmailAndPassword(auth,user.email,password).then(_ => {
-                    return userName
+                    return auth.currentUser.uid
                   }).catch( _  => {
                       return "error"
                   })
