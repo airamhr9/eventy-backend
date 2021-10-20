@@ -20,7 +20,7 @@ export async function register(userName, userPassword, userMail, userBirthDate, 
                     preferences : [],
                     username : userName
                 })
-                return userName
+                res.send(userName)
             }).catch((error) => {
                 const errorCode = error.code
                 const errorMessage = error.message
