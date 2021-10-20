@@ -67,33 +67,4 @@ export class DatabaseManager {
     
         return returnArr
     }
-
-    async checkName(userName){
-        await get(child(rdbRef,`users/${userName}`)).then((snapshot) => {
-            if(snapshot.exists()){
-                return Boolean(false)
-            }else{
-                return Boolean(true)
-            }
-        }).catch((error) => {
-            console.error(error)
-        })
-    }
-
-    async checkMail(userMail){
-        await get(child(rdbRef, `users`)).then((snapshot) => {
-            var res = "true"
-            if(snapshot.exists){
-                let users = this.snapToArray(snapshot)
-                for(var i = 0; i<users.length; i++){
-                    if(users[i].email == userMail){
-                        return Boolean(false)
-                    }
-                }
-                return Boolean(true)
-            }
-        }).catch((error) => {
-            console.error(error)
-        })
-    }
 }
