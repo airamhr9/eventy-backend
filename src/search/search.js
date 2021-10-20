@@ -19,7 +19,7 @@ export function search(searchText, searchTags, res){
           let tags = element.tags
 
           if(names.includes(makeLowerCase(searchText))){
-            if(findCommonElements(tags, searchTags)){
+            if(findCommonElements(tags, searchTags) && element.private == false){
               result.push(element)
             }
           }
