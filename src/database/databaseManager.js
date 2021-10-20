@@ -71,10 +71,8 @@ export class DatabaseManager {
     async checkName(userName){
         await get(child(rdbRef,`users/${userName}`)).then((snapshot) => {
             if(snapshot.exists()){
-                console.log("Name no disponible")
                 return Boolean(false)
             }else{
-                console.log("Name disponible")
                 return Boolean(true)
             }
         }).catch((error) => {
