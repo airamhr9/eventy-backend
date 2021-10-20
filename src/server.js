@@ -87,7 +87,7 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/register', (req,res) => {
-    res.send(register(req.query.username , req.query.password, req.query.email, req.query.birthdate, res))
+    register(req.query.username , req.query.password, req.query.email, req.query.birthdate, res)
 })
 
 app.get('/users', async (req, res) => {
