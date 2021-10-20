@@ -7,8 +7,8 @@ const auth = getAuth();
 const dbm = new DatabaseManager
 
 export async function register(userName, userPassword, userMail, userBirthDate, res){
-    if ( await dbm.checkName(userName)){
-        if( await dbm.checkMail(userMail)){
+    if (!(await dbm.checkName(userName))) {
+        if (!(await dbm.checkMail(userMail))) {
             await createUserWithEmailAndPassword(auth, userMail, userPassword).then((userCredential) => {
                 set(ref(rdb,`users/${userName}`),{
                     bio : "",
