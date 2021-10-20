@@ -55,19 +55,37 @@ export class DatabaseManager {
         return res
     }
 
-    async getUserPasswordByName(userName){
-        var res = "error"
-       await get(child(rdbRef, `users/`)).then((snapshot) => {
+    async checkName(userName){
+        await get(child(rdbRef,`users/${userName}`)).then((snapshot) => {
             if(snapshot.exists()){
-                let users = snapshot.val()
-                users.forEach(element => {
-                    if(element.username.toString() == userName.toString()){
-                        res = element.password
-                    }
-                })
+                console.log("Name no disponible")
+                return Boolean(false)
+            }else{
+                console.log("Name disponible")
+                return Boolean(true)
             }
         })
-        return res
     }
 
+    async checkMail(userMail){
+        await get(child(rdbRef, `users`)).then((snapshot) => {
+            if(snapshot.exists){
+                let users = []
+                users = snapshot.val()
+                users.forEach(element => {
+                    if(element.email == userMail){
+                        console.log("Mail no disponible")
+                        return Boolean(false)
+                    }
+                })
+                console.log("Mail disponible")
+                return Boolean(true)
+            }
+        })
+    }
 }
+
+const dbm = new DatabaseManager
+
+dbm.checkMail("Paco")
+dbm.checkName("Srueba")
