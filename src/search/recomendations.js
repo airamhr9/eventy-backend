@@ -16,7 +16,7 @@ export function recomend(res, user, latitude, longitude, page){
                     element.participants = []
                 }
 
-                if(findCommonElements(element.tags, pref)){
+                if(findCommonElements(element.tags, pref) && element.private == false){
                     result.push(element)
                 }                
             })
