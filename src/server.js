@@ -87,7 +87,7 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/register', (req,res) => {
-    register(req.query.username , req.query.password, req.query.email, req.query.birthdate, res)
+    res.send(register(req.query.username , req.query.password, req.query.email, req.query.birthdate, res))
 })
 
 app.get('/users', async (req, res) => {
@@ -168,6 +168,20 @@ app.post('/images', upload.single('photo'), (req, res) => {
     })
     unlink(req.file.path, (err) => {})
     res.send()
+})
+
+app.post('/multiImages', upload.array('photo', 6), (req, res) => {
+   for(var i = 0; i < 6; i++){
+    readFile(req.files[i].path, (err, data) => {
+        if (req.query.type == 'user') {
+            uploadImage(data, `users/${req.query.name}`)
+        } else if (req.query.type == 'event') {
+            uploadImage(data, `events/${req.query.name}`)
+        } else {
+            uploadImage(data, `communities/${req.query.name}`)
+        }
+        })
+    }
 })
 
 app.listen(port, () => {
