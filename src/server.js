@@ -13,6 +13,7 @@ import { getEvent, event, getEventParticipants, eventParticipants, listUserOlder
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
+import { register } from './users/register.js'
 import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWithURL_Community,
     objectWithURLs, uploadImage } from './images.js'
 import { eventChat, sendMssg } from './events/chat.js'
@@ -85,7 +86,7 @@ app.get('/login', (req, res) => {
     login(req.query.username, req.query.password, res)
 })
 
-app.post('/register,', (req,res) => {
+app.post('/register', (req,res) => {
     res.send(register(req.query.username , req.query.password, req.query.email, req.query.birthdate, res))
 })
 
