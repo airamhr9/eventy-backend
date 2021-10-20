@@ -7,7 +7,6 @@ const auth = getAuth();
 const dbm = new DatabaseManager
 
 export async function register(userName, userPassword, userMail, userBirthDate, res){
-    //comprobar nombre
     if (dbm.checkName(userName)){
         if(dbm.checkMail(userMail)){
             await createUserWithEmailAndPassword(auth, userMail, userPassword).then((userCredential) => {

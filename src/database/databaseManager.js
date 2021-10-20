@@ -55,6 +55,19 @@ export class DatabaseManager {
         return res
     }
 
+    snapToArray(snapshot){
+        var returnArr = []
+
+        snapshot.forEach(function(childSnapshot) {
+            var item = childSnapshot.val()
+            item.key = childSnapshot.key
+    
+            returnArr.push(item)
+        })
+    
+        return returnArr
+    }
+
     async checkName(userName){
         await get(child(rdbRef,`users/${userName}`)).then((snapshot) => {
             if(snapshot.exists()){
@@ -64,28 +77,25 @@ export class DatabaseManager {
                 console.log("Name disponible")
                 return Boolean(true)
             }
+        }).catch((error) => {
+            console.error(error)
         })
     }
 
     async checkMail(userMail){
         await get(child(rdbRef, `users`)).then((snapshot) => {
+            var res = "true"
             if(snapshot.exists){
-                let users = []
-                users = snapshot.val()
-                users.forEach(element => {
-                    if(element.email == userMail){
-                        console.log("Mail no disponible")
+                let users = this.snapToArray(snapshot)
+                for(var i = 0; i<users.length; i++){
+                    if(users[i].email == userMail){
                         return Boolean(false)
                     }
-                })
-                console.log("Mail disponible")
+                }
                 return Boolean(true)
             }
+        }).catch((error) => {
+            console.error(error)
         })
     }
 }
-
-const dbm = new DatabaseManager
-
-dbm.checkMail("Paco")
-dbm.checkName("Srueba")
