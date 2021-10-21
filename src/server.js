@@ -73,12 +73,12 @@ app.post('/events', (req,res) => {
 }) 
 
 app.post('/joinEvent', (req, res) => {
-    joinEvent(req.query.eventId, parseInt(req.query.userId))
+    joinEvent(req.query.eventId, req.query.userId)
     res.send()
 })
 
 app.post('/joinCommunity', (req, res) => {
-    joinCommunity(req.query.communityId, parseInt(req.query.userId))
+    joinCommunity(req.query.communityId, req.query.userId)
     res.send()
 })
 
@@ -94,7 +94,7 @@ app.get('/users', async (req, res) => {
     if (req.query.preferences != undefined) {
         getUserPreferences(res, req.query.id)
     } else if (req.query.olderEvents != undefined) {
-        await listUserOlderEvents(parseInt(req.query.id))
+        await listUserOlderEvents(req.query.id)
         let result = []
         for (let ev of userOlderEvents) {
             await replaceImagesWithURL_Event(ev)
@@ -120,7 +120,7 @@ app.put('/users', (req, res) => {
 
 app.get('/communities', async (req, res) => {
     if (req.query.user != undefined) {
-        await listUserCommunities(parseInt(req.query.user))
+        await listUserCommunities(req.query.user)
         let result = []
         for (let com of userCommunities) {
             await replaceImagesWithURL_Community(com)
