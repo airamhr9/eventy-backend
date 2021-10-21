@@ -6,7 +6,8 @@ const rdbRef = ref(rdb)
 const auth = getAuth()
 
 export async function login(userName, password, res) {
-    await get(child(rdbRef, `users/${userName}/`)).then((snapshot) => {
+    await getUserIdByUsername(userName)
+    await get(child(rdbRef, `users/${id}/`)).then((snapshot) => {
         if (snapshot.exists()) {
             let user = snapshot.val()
             if (user.password == password) {
@@ -24,5 +25,26 @@ export async function login(userName, password, res) {
     }).catch((error) => {
         console.error(error)
         res.send("Error")
+    })
+}
+
+let id
+async function getUserIdByUsername(username) {
+    await get(child(rdbRef, 'users')).then((snapshot) => {
+        if (snapshot.exists()) {
+            let allUsers = snapshot.val()
+            allUsers = Object.entries(allUsers)
+            for (let usr of allUsers) {
+                console.log(usr)
+                console.log(usr[1])
+                if (usr[1].username == username) {
+                    id = usr[1].id
+                    return
+                }
+            }
+            id = -1
+        } else {
+            id = -1
+        }
     })
 }
