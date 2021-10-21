@@ -10,17 +10,24 @@ export function recomend(res, user, latitude, longitude, page){
             let result = []
             let events = snapshot.val()
             let pref = user.preferences
-
             events.forEach(element => {
                 if (element.participants == undefined) {
                     element.participants = []
                 }
-
+                
                 if(findCommonElements(element.tags, pref) && element.private == false){
+                    
                     result.push(element)
                 }                
             })
             
+            if(result.length == 0){
+                for(var i = 0; i<events.length;i++){
+                    if(events[i].private == false){
+                        result.push(events[i])
+                    }
+                }
+            }
             sortByLocation(result, latitude, longitude, res, page)
         }
         
