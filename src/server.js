@@ -103,6 +103,7 @@ app.get('/users', async (req, res) => {
         res.send(result)
     } else {
         await getUser(req.query.id)
+        user.imageName = user.image
         await replaceImagesWithURL_User(user)
         res.send(objectWithURLs)
     }
