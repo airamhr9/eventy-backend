@@ -41,6 +41,18 @@ export async function replaceImagesWithURL_Community(community) {
     objectWithURLs = community
 }
 
+export async function replaceImagesWithURL_MssgEvent(mssg, event) {
+    await getFileURL(`images/events/${event}/messages/${mssg.images}`)
+    mssg.images = fileURL
+    objectWithURLs = mssg
+}
+
+export async function replaceImagesWithURL_MssgCom(mssg, com) {
+    await getFileURL(`images/communities/${com}/messages/${mssg.images}`)
+    mssg.images = fileURL
+    objectWithURLs = mssg
+}
+
 export function uploadImage(file, path) {
     let extension = path.split('.')
     extension = extension[extension.length - 1]
