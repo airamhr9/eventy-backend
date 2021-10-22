@@ -49,7 +49,8 @@ export function sendMssgComm(message, communityId, res){
         id: idKey,
         text: message.text,
         user: message.user,
-        time: message.time
+        time: message.time,
+        images: message.images
     })
     
 
