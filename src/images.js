@@ -42,13 +42,13 @@ export async function replaceImagesWithURL_Community(community) {
 }
 
 export async function replaceImagesWithURL_MssgEvent(mssg, event) {
-    await getFileURL(`images/events/${event}/messages/${mssg.id}/${mssg.images}`)
+    await getFileURL(`images/users/${mssg.images}`)
     mssg.images = fileURL
     objectWithURLs = mssg
 }
 
 export async function replaceImagesWithURL_MssgCom(mssgC, com) {
-    await getFileURL(`images/communities/${com}/messages/${mssgC.id}/${mssgC.images}`)
+    await getFileURL(`images/users/${mssgC.images}`)
     mssgC.images = fileURL
     objectWithURLs = mssgC
 }
