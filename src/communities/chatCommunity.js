@@ -1,4 +1,5 @@
 import { get, ref, set, child, push } from '@firebase/database'
+import { objectWithURLs, replaceImagesWithURL_MssgCom } from '../images.js'
 import {rdb} from '../index.js'
 import {Message} from '../objects/message.js'
 
@@ -16,7 +17,7 @@ export function communityChat(res, communityId){
             let aux = new Message(mssgList[i].id, mssgList[i].user, mssgList[i].text, mssgList[i].time, mssgList[i].images)
             allMssg.push(aux)
         }
-        sortMssgs(allMssg, res)
+        sortMssgs(allMssg, communityId, res)
 
     })).catch((error) => {
         console.error(error)
@@ -55,13 +56,19 @@ export function sendMssgComm(message, communityId, res){
     res.send(message)
 }
 
-function sortMssgs(mssgs, res){
+async function sortMssgs(mssgs, commId, res){
     try {
+        let fullResult = []
         const result = mssgs.sort((a,b) => 
             b.time.localeCompare(a.time)
         )
 
-        const response = {"count":result.length,"messages": result.reverse()}
+        for(var i = 0;i<result.length;i++){
+            await replaceImagesWithURL_MssgCom(result[i], commId)
+            fullResult.push(objectWithURLs)
+        }
+
+        const response = {"count":fullResult.length,"messages": fullResult.reverse()}
         res.json(response)
     } catch (error) {
     
