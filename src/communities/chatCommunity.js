@@ -13,7 +13,7 @@ export function communityChat(res, communityId){
         var allMssg = []
 
         for(var i = 0; i<mssgList.length;i++){
-            let aux = new Message(mssgList[i].id, mssgList[i].user, mssgList[i].text, mssgList[i].time)
+            let aux = new Message(mssgList[i].id, mssgList[i].user, mssgList[i].text, mssgList[i].time, mssgList[i].images)
             allMssg.push(aux)
         }
         sortMssgs(allMssg, res)
