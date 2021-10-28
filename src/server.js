@@ -18,6 +18,7 @@ import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWit
     objectWithURLs, uploadImage } from './images.js'
 import { eventChat, sendMssg } from './events/chat.js'
 import { communityChat, sendMssgComm } from './communities/chatCommunity.js'
+import { searchComm } from './search/searchCommunity.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -34,6 +35,12 @@ app.get('/search', (req, res) =>{
     let txt = req.query.text
     let tags = req.query.tags
     search(txt, tags, res)
+})
+
+app.get('/searchComm', (req, res) =>{
+    let txt = req.query.text
+    let tags = req.query.tags
+    searchComm(txt, tags, res)
 })
 
 app.get('/recomend', (req, res) =>{
