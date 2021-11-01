@@ -11,6 +11,10 @@ export function searchComm(searchText, searchTags, res){
         let events = snapshot.val()
 
         events.forEach(element => {
+          if (element.tags == undefined){
+            element.tags = []
+          }
+          
           let names = makeLowerCase(element.name)
           let tags = element.tags
 

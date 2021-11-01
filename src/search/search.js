@@ -15,6 +15,10 @@ export function search(searchText, searchTags, res){
             element.participants = []
           }
 
+          if (element.tags == undefined){
+            element.tags = []
+          }
+
           let names = makeLowerCase(element.name)
           let tags = element.tags
 
