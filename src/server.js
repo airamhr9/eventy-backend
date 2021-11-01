@@ -80,7 +80,13 @@ app.post('/events', (req,res) => {
 }) 
 
 app.post('/joinEvent', (req, res) => {
-    joinEvent(req.query.eventId, req.query.userId)
+    let confirmed
+    if (req.query.confirmed.toLowerCase() == 'true') {
+        confirmed = true
+    } else if (req.query.confirmed.toLowerCase() == 'false') {
+        confirmed = false
+    }
+    joinEvent(req.query.eventId, req.query.userId, confirmed)
     res.send()
 })
 

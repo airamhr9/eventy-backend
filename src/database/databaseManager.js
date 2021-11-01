@@ -29,16 +29,23 @@ export class DatabaseManager {
         } )
     }
 
-    addParticipantToEvent(eventId, userId) {
+    addParticipantToEvent(eventId, userId, confirmed) {
         get(child(rdbRef,`events/${eventId}/`)).then((snapshot) => {
-            let event = snapshot.val() 
-            if (event.participants == undefined) {
-                event.participants = []
-            }
-            event.participants.push(userId)
+            let event = snapshot.val()
+            if (confirmed) {
+                if (event.participants == undefined) {
+                    event.participants = []
+                }
+                event.participants.push(userId)
+            } else {
+                if (event.possiblyParticipants == undefined) {
+                    event.possiblyParticipants = []
+                }
+                event.possiblyParticipants.push(userId)
+            }            
             update(ref(rdb, `events/${eventId}/`), event)
-        }        
-    )}
+        })
+    }
 
     async getUserPasswordByName(userName){
         var res = "error"

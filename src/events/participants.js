@@ -8,11 +8,17 @@ export let eventParticipants
 
 export async function getEventParticipants(eventId) {
     await getEvent(eventId)
-    eventParticipants = []
+    let confirmedParticipants = []
+    let possiblyParticipants = []
     for (let userId of event.participants) {
         await getUser(userId)
-        eventParticipants.push(user)
+        confirmedParticipants.push(user)
     }
+    for (let userId of event.possiblyParticipants) {
+        await getUser(userId)
+        possiblyParticipants.push(user)
+    }
+    eventParticipants = [confirmedParticipants, possiblyParticipants]
 }
 
 export async function getEvent(eventId) {
@@ -21,6 +27,9 @@ export async function getEvent(eventId) {
             event = snapshot.val()
             if (event.participants == undefined) {
                 event.participants = []
+            }
+            if (event.possiblyParticipants == undefined) {
+                event.possiblyParticipants = []
             }
         } else {
             event = null
