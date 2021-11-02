@@ -15,15 +15,14 @@ export function search(searchText, searchTags, res){
             element.participants = []
           }
 
-          if (element.tags == undefined){
-            element.tags = []
-          }
-
           let names = makeLowerCase(element.name)
           let tags = element.tags
 
           if(names.includes(makeLowerCase(searchText))){
-            if(findCommonElements(tags, searchTags) && element.private == false){
+            if(element.tags != undefined && findCommonElements(tags, searchTags) && element.private == false){
+              result.push(element)
+            }
+            else if(element.tags == undefined && element.private == false && searchTags == []){
               result.push(element)
             }
           }
