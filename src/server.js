@@ -19,6 +19,8 @@ import { replaceImagesWithURL_Event, replaceImagesWithURL_User, replaceImagesWit
 import { eventChat, sendMssg } from './events/chat.js'
 import { communityChat, sendMssgComm } from './communities/chatCommunity.js'
 import { searchComm } from './search/searchCommunity.js'
+import { saveToLater } from './events/seeItLater.js'
+import { getLaterEvents } from './events/seeItLater.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -196,6 +198,15 @@ app.post('/multiImages', upload.array('photo', 6), (req, res) => {
         }
         })
     }
+})
+
+app.post('/seeItLater', (req, res) => {
+    saveToLater(req.query.userId, req.query.eventId)
+    res.send()
+})
+
+app.get('/seeItLater', (req, res) => {
+    getLaterEvents(req.query.userId, res)
 })
 
 app.listen(port, () => {
