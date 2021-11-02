@@ -63,6 +63,11 @@ function filter(filters, searchedEvents){
         resultFilter.push(element)
       }
     }
+    else if(!filters.unique && filters.startDate == undefined){
+      if(filters.price >= pr && filters.localization == loc){
+        resultFilter.push(element)
+      }
+    }
   })
   returnEvents(res, resultFilter)
 }
