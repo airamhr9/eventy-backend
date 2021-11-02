@@ -10,16 +10,18 @@ export function searchComm(searchText, searchTags, res){
         let result = []
         let events = snapshot.val()
 
-        events.forEach(element => {
-          if (element.tags == undefined){
-            element.tags = []
-          }
-          
+        events.forEach(element => {  
           let names = makeLowerCase(element.name)
           let tags = element.tags
 
           if(names.includes(makeLowerCase(searchText))){
-            if(findCommonElements(tags, searchTags) && element.private == false){
+            if(element.tags != undefined && findCommonElements(tags, searchTags) && element.private == false){
+              result.push(element)
+            }
+            else if(element.tags == undefined && element.private == false && searchTags == []){
+              result.push(element)
+            }
+            else if(element.tags != undefined && element.private == false && searchTags == []){
               result.push(element)
             }
           }
