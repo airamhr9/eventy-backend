@@ -4,7 +4,7 @@ import { replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
-export function search(searchText, searchTags, res){
+export function search(searchText, searchTags, filters, res){
     get(child(rdbRef, 'events/')).then((snapshot) =>{
       if(snapshot.exists()){
         let result = []
@@ -27,8 +27,8 @@ export function search(searchText, searchTags, res){
             }
           }
         })
-        
-        returnEvents(res, result)
+        if(filters != undefined){filter(filters, result)}
+        else{returnEvents(res, result)}
       }
     })
 }
@@ -43,6 +43,28 @@ function findCommonElements(arr1, arr2) {
   } catch (error) {
     return "no se pudo encontrar"
   }
+}
+
+function filter(filters, searchedEvents){
+  let resultFilter = []
+  searchedEvents.forEach(element => {
+    let sDate = element.startDate
+    let fDate = element.finishDate
+    let pr = element.price
+    let loc = [element.latitude, element.longitude]
+
+    if(filters.unique && filters.startDate == sDate){
+      if(filters.price >= pr && filters.localization == loc){
+        resultFilter.push(element)
+      }
+    }
+    else if(!filters.unique && filters.startDate == sDate && filters.finishDate == fDate){
+      if(filters.price >= pr && filters.localization == loc){
+        resultFilter.push(element)
+      }
+    }
+  })
+  returnEvents(res, resultFilter)
 }
 
 async function returnEvents(res, events){
