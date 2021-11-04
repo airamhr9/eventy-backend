@@ -2,8 +2,8 @@ import { child, get, ref, set } from '@firebase/database'
 import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
-const eventsId = []
-const events = []
+
+
 
 export function saveToLater(userId, eventId){
     set(ref(rdb, `users/${userId}/seeItLater/${eventId}` ),{
@@ -12,6 +12,7 @@ export function saveToLater(userId, eventId){
 }
 
 export async function getLaterEvents(userId, res){
+    const eventsId = []
     await get(child(rdbRef,`users/${userId}/seeItLater`)).then((snapshot) =>
     {
         if(snapshot.exists()){
@@ -20,7 +21,7 @@ export async function getLaterEvents(userId, res){
                     item =  childSnapshot.key
                     eventsId.push(item)
                 })  
-                getDataOfEvents(res)
+                getDataOfEvents(res, eventsId)
         } else {
             res.send([])
         }
@@ -29,7 +30,9 @@ export async function getLaterEvents(userId, res){
     })
 }
 
-async function getDataOfEvents(res){
+async function getDataOfEvents(res, eventsId){
+    var events = []
+    
     for( const id of eventsId){
         await get(child(rdbRef,`events/${id}`)).then( (snapshot) => {
             events.push(snapshot.val())
