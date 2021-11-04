@@ -1,9 +1,8 @@
 import { child, get, ref, set } from '@firebase/database'
 import { rdb } from '../index.js'
+import { replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
-
-
 
 export function saveToLater(userId, eventId){
     set(ref(rdb, `users/${userId}/seeItLater/${eventId}` ),{
@@ -12,7 +11,7 @@ export function saveToLater(userId, eventId){
 }
 
 export async function getLaterEvents(userId, res){
-    const eventsId = []
+    var eventsId = []
     await get(child(rdbRef,`users/${userId}/seeItLater`)).then((snapshot) =>
     {
         if(snapshot.exists()){
@@ -30,13 +29,14 @@ export async function getLaterEvents(userId, res){
     })
 }
 
-async function getDataOfEvents(res, eventsId){
+async function getDataOfEvents(res, eventsId) {
     var events = []
-    
-    for( const id of eventsId){
-        await get(child(rdbRef,`events/${id}`)).then( (snapshot) => {
-            events.push(snapshot.val())
-        }).catch((error) => {console.error(error)})
+    for (const id of eventsId) {
+        await get(child(rdbRef, `events/${id}`)).then( async (snapshot) => {
+            let event = snapshot.val()
+            await replaceImagesWithURL_Event(event)
+            events.push(objectWithURLs)
+        }).catch((error) => { console.error(error) })
     }
     res.send(events)
 }
