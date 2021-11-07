@@ -4,7 +4,7 @@ import { replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
-export function search(searchText, searchTags, filters, res){
+export function search(searchText, searchTags, filters, enableFilt, res){
     get(child(rdbRef, 'events/')).then((snapshot) =>{
       if(snapshot.exists()){
         let result = []
@@ -25,9 +25,12 @@ export function search(searchText, searchTags, filters, res){
             else if(element.tags == undefined && element.private == false && searchTags == []){
               result.push(element)
             }
+            else if(element.tags != undefined && element.private == false && searchTags == []){
+              result.push(element)
+            }
           }
         })
-        if(filters != undefined){filter(filters, result)}
+        if(enableFilt != false){filter(filters, result, res)}
         else{returnEvents(res, result)}
       }
     })
@@ -45,26 +48,21 @@ function findCommonElements(arr1, arr2) {
   }
 }
 
-function filter(filters, searchedEvents){
+function filter(filters, searchedEvents, res){
   let resultFilter = []
   searchedEvents.forEach(element => {
-    let sDate = element.startDate
-    let fDate = element.finishDate
+    let sDate = new Date(element.startDate).getDate()
+    let fDate = new Date(element.finishDate).getDate()
     let pr = element.price
     let loc = [element.latitude, element.longitude]
 
-    if(filters.unique && filters.startDate == sDate){
-      if(filters.price >= pr && filters.localization == loc){
+    if(filters[0] != false && new Date(filters[1]).getDate() == sDate && sDate == fDate){
+      if((filters[3] >= pr || filters[3] == undefined) && (filters[4] == loc || filters[4] == undefined)){
         resultFilter.push(element)
       }
     }
-    else if(!filters.unique && filters.startDate == sDate && filters.finishDate == fDate){
-      if(filters.price >= pr && filters.localization == loc){
-        resultFilter.push(element)
-      }
-    }
-    else if(!filters.unique && filters.startDate == undefined){
-      if(filters.price >= pr && filters.localization == loc){
+    else if(filters[0] != true && new Date(filters[1]).getDate() == sDate && new Date(filters[2]).getDate() == fDate && sDate != fDate){
+      if((filters[3] >= pr || filters[3] == "") && (filters[4] == loc || filters[4] == "")){
         resultFilter.push(element)
       }
     }

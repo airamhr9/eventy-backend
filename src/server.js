@@ -36,7 +36,8 @@ app.get('/tags', (req, res) => {
 app.get('/search', (req, res) =>{
     let txt = req.query.text
     let tags = req.query.tags
-    search(txt, tags, res)
+    let filt = [req.query.unique, req.query.sDate, req.query.fDate, req.query.price, req.query.loc]
+    search(txt, tags, filt, req.query.enabled, res)
 })
 
 app.get('/searchComm', (req, res) =>{
