@@ -30,8 +30,9 @@ export function search(searchText, searchTags, filters, enableFilt, res){
             }
           }
         })
-        if(enableFilt != false){filter(filters, result, res)}
-        else{returnEvents(res, result)}
+        if(enableFilt == undefined){returnEvents(res, result)}
+        else{ console.log("j")
+          filter(filters, result, res)}
       }
     })
 }
@@ -57,14 +58,14 @@ function filter(filters, searchedEvents, res){
     let loc = [element.latitude, element.longitude]
 
     if(filters[0] != false && new Date(filters[1]).getDate() == sDate && sDate == fDate){
-      if((filters[3] >= pr || filters[3] == "") && (filters[5] <= pr || filters[5] == "")){
+      if((filters[3] >= pr || filters[3] == "") && (pr >= filters[5] || filters[5] == undefined)){
         if(plusMinus(filters[4], loc, 0.2) != false || filters[4] == ""){
           resultFilter.push(element)
         }
       }
     }
     else if(filters[0] != true && new Date(filters[1]).getDate() == sDate && new Date(filters[2]).getDate() == fDate && sDate != fDate){
-      if((filters[3] >= pr || filters[3] == "") && (filters[5] <= pr || filters[5] == "")){
+      if((filters[3] >= pr || filters[3] == "") && (pr >= filters[5] || filters[5] == undefined)){
         if(plusMinus(filters[4], loc, 0.2) != false || filters[4] == ""){
           resultFilter.push(element)
         }
