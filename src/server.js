@@ -21,6 +21,7 @@ import { communityChat, sendMssgComm } from './communities/chatCommunity.js'
 import { searchComm } from './search/searchCommunity.js'
 import { saveToLater } from './events/seeItLater.js'
 import { getLaterEvents } from './events/seeItLater.js'
+import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, makeFriendshipRequest } from './users/friends.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -208,6 +209,30 @@ app.post('/seeItLater', (req, res) => {
 
 app.get('/seeItLater', (req, res) => {
     getLaterEvents(req.query.userId, res)
+})
+
+app.get('/friends', async (req, res) => {
+    await getFriends(req.query.user)
+    res.send(friendsAndFriendshipRequests)
+})
+
+app.post('/friends', (req, res) => {
+    if (req.query.op.toUpperCase() == 'REQUEST') {
+        try {
+            makeFriendshipRequest(req.query.userId1, req.query.username2)
+            res.send()
+        } catch (error) {
+            res.send('El usuario introducido no existe')
+        }
+    } else if (req.query.op.toUpperCase() == 'ACCEPT') {
+        beFriends(req.query.userId1, req.query.username2)
+        res.send()
+    } else if (req.query.op.toUpperCase() == 'REJECT') {
+        notBeFriends(req.query.userId1, req.query.username2)
+        res.send()
+    } else {
+        res.send('Operation not supported')
+    }
 })
 
 app.listen(port, () => {

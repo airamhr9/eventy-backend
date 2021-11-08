@@ -12,9 +12,41 @@ export async function getUser(userId) {
             if (user.preferences == undefined) {
                 user.preferences = []
             }
+            if (user.friends == undefined) {
+                user.friends = []
+            }
+            if (user.friendshipRequests == undefined) {
+                user.friendshipRequests = []
+            }
         } else {
             user = 'User does not exist'
         }
+        }).catch((error) => {
+            console.error(error)
+    });
+}
+
+export async function getUserByUsername(username) {
+    await get(child(rdbRef, 'users')).then((snapshot) => {
+        if (snapshot.exists()) {
+            let users = snapshot.val()
+            users = Object.values(users)
+            for (let u of users) {
+                if (u.username == username) {
+                    user = u
+                    if (user.preferences == undefined) {
+                        user.preferences = []
+                    }
+                    if (user.friends == undefined) {
+                        user.friends = []
+                    }
+                    if (user.friendshipRequests == undefined) {
+                        user.friendshipRequests = []
+                    }
+                    return
+                }
+            }
+        } 
         }).catch((error) => {
             console.error(error)
     });
@@ -29,6 +61,8 @@ export function updateUser(user) {
         image: user.image,
         password: user.password,
         preferences: user.preferences,
-        username: user.username
+        username: user.username,
+        friends : user.friends || [],
+        friendshipRequests : user.friendshipRequests || []
     })
 }
