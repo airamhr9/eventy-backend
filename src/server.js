@@ -63,12 +63,7 @@ app.get('/recomend', (req, res) =>{
 app.get('/events', async (req, res) => {
     if (req.query.participants != undefined) { 
         await getEventParticipants(req.query.id)
-        let result = []
-        for (let usr of eventParticipants) {
-            await replaceImagesWithURL_User(usr)
-            result.push(objectWithURLs)
-        }
-        res.send(result)
+        res.send(eventParticipants)
     } else {
         await getEvent(req.query.id)
         await replaceImagesWithURL_Event(event)

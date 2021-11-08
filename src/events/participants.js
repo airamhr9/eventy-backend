@@ -1,8 +1,10 @@
 import { child, get, ref } from '@firebase/database'
 import { rdb } from '../index.js'
 import { getUser, user } from '../users/userProfile.js'
+import { replaceImagesWithURL_User, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
+
 export let event
 export let eventParticipants
 
@@ -12,11 +14,13 @@ export async function getEventParticipants(eventId) {
     let possiblyParticipants = []
     for (let userId of event.participants) {
         await getUser(userId)
-        confirmedParticipants.push(user)
+        await replaceImagesWithURL_User(user)
+        confirmedParticipants.push(objectWithURLs)
     }
     for (let userId of event.possiblyParticipants) {
         await getUser(userId)
-        possiblyParticipants.push(user)
+        await replaceImagesWithURL_User(user)
+        possiblyParticipants.push(objectWithURLs)
     }
     eventParticipants = [confirmedParticipants, possiblyParticipants]
 }
