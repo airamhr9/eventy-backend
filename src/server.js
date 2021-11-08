@@ -22,6 +22,7 @@ import { searchComm } from './search/searchCommunity.js'
 import { saveToLater } from './events/seeItLater.js'
 import { getLaterEvents } from './events/seeItLater.js'
 import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, makeFriendshipRequest } from './users/friends.js'
+import { searchUsers } from './users/searchUsers.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -228,6 +229,10 @@ app.post('/friends', (req, res) => {
     } else {
         res.send('Operation not supported')
     }
+})
+
+app.get('/searchUsers', (req, res) => {
+    searchUsers(req.query.search, res)
 })
 
 app.listen(port, () => {
