@@ -23,6 +23,7 @@ import { saveToLater } from './events/seeItLater.js'
 import { getLaterEvents } from './events/seeItLater.js'
 import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, makeFriendshipRequest } from './users/friends.js'
 import { searchUsers } from './users/searchUsers.js'
+import { createPost, getAllPosts, getPost, commentPost, getComments } from './communities/muro.js'
 
 const app = express()
 const port = process.argv[2] || 8000
@@ -234,6 +235,26 @@ app.post('/friends', (req, res) => {
 
 app.get('/searchUsers', (req, res) => {
     searchUsers(req.query.search, res)
+})
+
+app.post('/post', (req,res) => {
+    createPost(req.body.idCommunity, req.body.post, res)
+})
+
+app.get('/allPosts', (req,res) => {
+    getAllPosts(req.query.idCommunity,res)
+})
+
+app.get('/post', (req,res) => {
+    getPost(req.query.idPost, res)
+})
+
+app.post('/comment', (req,res) => {
+    commentPost(req.query.idCommunity, req.query.idPost, req.query.author, req.query.comment, req.query.date, res)
+})
+
+app.get('/comments', (req,res) => {
+    getComments(req.query.idPost, res)
 })
 
 app.listen(port, () => {
