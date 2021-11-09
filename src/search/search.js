@@ -57,6 +57,10 @@ function filter(filters, searchedEvents, res){
     let pr = element.price
     let loc = [element.latitude, element.longitude]
 
+    if(filters[1] == undefined || filters[1] == ""){
+      filters[1] = new Date(Date.now()).toISOString()
+    }
+
     if(filters[0] != false && new Date(filters[1]).getDate() == sDate && sDate == fDate){
       if((filters[3] >= pr || filters[3] == "") && (pr >= filters[5] || filters[5] == undefined)){
         if(plusMinus(filters[4], loc, 0.2) != false || filters[4] == ""){
