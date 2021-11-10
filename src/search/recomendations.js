@@ -14,10 +14,13 @@ export function recomend(res, user, latitude, longitude, page){
                 if (element.participants == undefined) {
                     element.participants = []
                 }
+                if (element.possiblyParticipants == undefined) {
+                    element.possiblyParticipants = []
+                }
                 
                 if(findCommonElements(element.tags, pref) && element.private == false){
-                    if(new Date(element.finishDate).getDate() >= Date.now()){
-                        if(!element.participants.includes(user) && !element.possiblyParticipants.includes(user)){
+                    if(new Date(element.finishDate) >= new Date(Date.now())){
+                        if(element.participants.includes(user.id) == false && element.possiblyParticipants.includes(user.id) == false){
                             result.push(element)
                         }
                     }
@@ -27,7 +30,11 @@ export function recomend(res, user, latitude, longitude, page){
             if(result.length == 0){
                 for(var i = 0; i<events.length;i++){
                     if(events[i].private == false){
-                        result.push(events[i])
+                        if(new Date(events[i].finishDate) >= new Date(Date.now())){
+                            if(events[i].participants.includes(user.id) == false && events[i].possiblyParticipants.includes(user.id) == false){
+                                result.push(events[i])
+                            }
+                        }
                     }
                 }
             }

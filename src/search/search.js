@@ -60,8 +60,6 @@ function filter(filters, searchedEvents, res){
       filters[1] = new Date(Date.now()).toISOString()
     }
 
-    console.log(filters[5])
-
     if(filters[0] == true){
       if(new Date(filters[1]).getDate() <= sDate && new Date(filters[2]).getDate() >= fDate && sDate == fDate){ //entre las fechas ini y fin del filtro y que solo dure un dia
         if((filters[3] >= pr || filters[3] == undefined) && (pr >= filters[5] || filters[5] == undefined)){
