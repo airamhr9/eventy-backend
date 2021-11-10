@@ -1,11 +1,11 @@
-import { child, get, ref } from '@firebase/database'
+import { child, get, ref, set } from '@firebase/database'
 import { rdb } from '../index.js'
 import { getUser, user } from './userProfile.js'
 import { replaceImagesWithURL_User, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
-export function getUserGroups(userId, res) {
+export function sendUserGroups(userId, res) {
     get(child(rdbRef, 'groups')).then(async (snapshot) => {
         let result = []
         if (snapshot.exists()) {
@@ -38,5 +38,11 @@ export function getUserGroups(userId, res) {
         res.send(result)
     }).catch((error) => {
         console.error(error)
+    })
+}
+
+export function createGroup(userId1, userId2) {
+    set(ref(rdb, 'groups'), {
+        
     })
 }
