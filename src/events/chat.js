@@ -14,7 +14,7 @@ export function eventChat(res, eventId){
         var allMssg = []
 
         for(var i = 0; i<mssgList.length;i++){
-            let aux = new Message(mssgList[i].id, mssgList[i].user, mssgList[i].text, mssgList[i].time, mssgList[i].images)
+            let aux = new Message(mssgList[i].key, mssgList[i].userId, mssgList[i].username, mssgList[i].text, mssgList[i].time, mssgList[i].images)
             allMssg.push(aux)
         }
         sortMssgs(allMssg, eventId, res)
@@ -47,8 +47,9 @@ export function sendMssg(message, eventId, res){
 
     set(newRef, {
         id: idKey,
+        userId: message.userId,
         text: message.text,
-        user: message.user,
+        username: message.username,
         time: message.time,
         images: message.images
     })
