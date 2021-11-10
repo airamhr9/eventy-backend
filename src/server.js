@@ -24,6 +24,7 @@ import { getLaterEvents } from './events/seeItLater.js'
 import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, makeFriendshipRequest } from './users/friends.js'
 import { searchUsers } from './users/searchUsers.js'
 import { createPost, getAllPosts, getPost, commentPost, getComments } from './communities/muro.js'
+import { getUserGroups } from './users/groups.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -255,6 +256,14 @@ app.post('/comment', (req,res) => {
 
 app.get('/comments', (req,res) => {
     getComments(req.query.idPost, res)
+})
+
+app.get('/groups', (req, res) => {
+    getUserGroups(req.query.user, res)
+})
+
+app.post('/group', (req, res) => {
+
 })
 
 app.listen(port, () => {

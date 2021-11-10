@@ -35,8 +35,6 @@ async function getUserIdByUsername(username) {
             let allUsers = snapshot.val()
             allUsers = Object.entries(allUsers)
             for (let usr of allUsers) {
-                console.log(usr)
-                console.log(usr[1])
                 if (usr[1].username == username) {
                     id = usr[1].id
                     return
