@@ -16,8 +16,11 @@ export function recomend(res, user, latitude, longitude, page){
                 }
                 
                 if(findCommonElements(element.tags, pref) && element.private == false){
-                    
-                    result.push(element)
+                    if(new Date(element.finishDate).getDate() >= Date.now()){
+                        if(!element.participants.includes(user) && !element.possiblyParticipants.includes(user)){
+                            result.push(element)
+                        }
+                    }
                 }                
             })
             
