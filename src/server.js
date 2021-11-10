@@ -26,7 +26,7 @@ import { searchUsers } from './users/searchUsers.js'
 import { createPost, getAllPosts, getPost, commentPost, getComments } from './communities/muro.js'
 
 const app = express()
-const port = process.argv[2] || 8000
+const port = process.env.PORT || 8000
 
 const upload = multer({ dest: 'uploads/' })
 
