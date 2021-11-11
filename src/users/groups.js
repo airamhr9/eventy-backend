@@ -1,4 +1,4 @@
-import { child, get, ref, set } from '@firebase/database'
+import { child, get, ref, set, push, update } from '@firebase/database'
 import { rdb } from '../index.js'
 import { getUser, user } from './userProfile.js'
 import { replaceImagesWithURL_User, objectWithURLs } from '../images.js'
@@ -25,10 +25,10 @@ export function sendUserGroups(userId, res) {
                             "id": u.userId,
                             "username": objectWithURLs.username,
                             "image": objectWithURLs.image,
-                            "dateMin": u.dateMin,
-                            "dateMax": u.dateMax,
-                            "price": u.price,
-                            "tags": u.tags
+                            "dateMin": u.dateMin || "",
+                            "dateMax": u.dateMax || "",
+                            "price": u.price || "",
+                            "tags": u.tags || []
                         })
                     }
                     result.push(objectToSend)
@@ -42,7 +42,31 @@ export function sendUserGroups(userId, res) {
 }
 
 export function createGroup(userId1, userId2) {
-    set(ref(rdb, 'groups'), {
-        
+    let refNewGroup = ref(rdb, 'groups')
+    let newGroupId = push(refNewGroup).key
+
+    set(ref(rdb, `groups/${newGroupId}`), {
+        id: newGroupId
     })
+
+    set(ref(rdb, `groups/${newGroupId}/users/${userId1}`), {
+        userId: userId1
+    })
+
+    set(ref(rdb, `groups/${newGroupId}/users/${userId2}`), {
+        userId: userId2
+    })
+}
+
+export function updateGroup(groupId, data) {
+    let path = `groups/${groupId}/users/${data.userId}`
+    get(child(rdbRef, path)).then((snapshot) => {
+            if (snapshot.exists()) {
+                update(ref(rdb, path), data)
+            } else {
+                set(ref(rdb, path), data)
+            }
+        }).catch((error) => {
+            console.error(error)
+    });
 }
