@@ -25,6 +25,7 @@ import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, make
 import { searchUsers } from './users/searchUsers.js'
 import { createPost, getAllPosts, getPost, commentPost, getComments } from './communities/muro.js'
 import { sendUserGroups, createGroup, updateGroup, addGroupMembersToEvent } from './users/groups.js'
+import { sendEventMarks, addEventMark } from './users/eventMarks.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -80,7 +81,7 @@ app.post('/events', (req,res) => {
         req.body.maxParticipants, req.body.name, req.body.owner, req.body.price, req.body.private, req.body.startDate,
         req.body.summary, req.body.tags)
     res.send()
-}) 
+})
 
 app.post('/joinEvent', (req, res) => {
     let confirmed
@@ -117,6 +118,8 @@ app.get('/users', async (req, res) => {
             result.push(objectWithURLs)
         }
         res.send(result)
+    } else if (req.query.eventMarks != undefined) {
+        sendEventMarks(req.query.user, res)
     } else {
         await getUser(req.query.id)
         user.imageName = user.image
@@ -128,11 +131,12 @@ app.get('/users', async (req, res) => {
 app.put('/users', (req, res) => {
     if (req.query.preferences != undefined) {
         setUserPreferences(req.query.id, req.body)
-        res.send()
+    } else if (req.query.mark != undefined) {
+        addEventMark(req.query.user, req.query.event, req.query.mark)
     } else {
         updateUser(req.body)
-        res.send()
     }
+    res.send()
 })
 
 app.get('/communities', async (req, res) => {
