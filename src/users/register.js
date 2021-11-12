@@ -35,7 +35,7 @@ export async function register(userName, userPassword, userMail, userBirthDate,r
                 birthdate : userBirthDate,
                 email : userMail,
                 id : userCredential.user.uid,
-                image : "",
+                image : "userImg.jpg",
                 password : userPassword,
                 preferences : [],
                 username : userName
