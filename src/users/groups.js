@@ -2,6 +2,7 @@ import { child, get, ref, set, push, update } from '@firebase/database'
 import { rdb } from '../index.js'
 import { getUser, user } from './userProfile.js'
 import { replaceImagesWithURL_User, objectWithURLs } from '../images.js'
+import { getEvent, event } from '../events/participants.js'
 
 const rdbRef = ref(rdb)
 
@@ -69,4 +70,15 @@ export function updateGroup(groupId, data) {
         }).catch((error) => {
             console.error(error)
     });
+}
+
+export function addGroupMembersToEvent(groupId, eventId) {
+    get(child(rdbRef, `groups/${groupId}/users`)).then(async (snapshot) => {
+        let groupUsersIds = Object.keys(snapshot.val())
+        await getEvent(eventId)     
+        groupUsersIds.forEach(userId => {
+            event.participants.push(userId)
+        })
+        update(ref(rdb, `events/${eventId}`), event)
+    })
 }

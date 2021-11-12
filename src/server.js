@@ -24,7 +24,7 @@ import { getLaterEvents } from './events/seeItLater.js'
 import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, makeFriendshipRequest } from './users/friends.js'
 import { searchUsers } from './users/searchUsers.js'
 import { createPost, getAllPosts, getPost, commentPost, getComments } from './communities/muro.js'
-import { sendUserGroups, createGroup, updateGroup } from './users/groups.js'
+import { sendUserGroups, createGroup, updateGroup, addGroupMembersToEvent } from './users/groups.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -268,7 +268,11 @@ app.post('/groups', (req, res) => {
 })
 
 app.put('/groups', (req, res) => {
-    updateGroup(req.query.group, req.body)
+    if (req.query.event == undefined) {
+        updateGroup(req.query.group, req.body)
+    } else {
+        addGroupMembersToEvent(req.query.group, req.query.event)
+    }    
     res.send()
 })
 
