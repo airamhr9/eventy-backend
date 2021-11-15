@@ -20,6 +20,7 @@ export function sendUserGroups(userId, res) {
                 if (groupUsersIds.includes(userId)) {
                     let objectToSend = {}
                     objectToSend.id = g.id
+                    objectToSend.creator = g.creator
                     objectToSend.users = []
                     objectToSend.unconfirmedUsers = []
                     // Añadir nombre y foto a cada usuario para enviar
@@ -30,6 +31,7 @@ export function sendUserGroups(userId, res) {
                             "id": u.userId,
                             "username": objectWithURLs.username,
                             "image": objectWithURLs.image,
+                            "validPreferences": u.validPreferences,
                             "dateMin": u.dateMin || "",
                             "dateMax": u.dateMax || "",
                             "price": u.price || "",
@@ -74,7 +76,8 @@ export function createGroup(creatorId) {
         creator: creatorId
     })
     set(ref(rdb, `groups/${newGroupId}/users/${creatorId}`), {
-        userId: creatorId
+        userId: creatorId,
+        validPreferences: false
     })
 
     return newGroupId
