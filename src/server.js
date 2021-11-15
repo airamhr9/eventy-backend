@@ -23,7 +23,7 @@ import { saveToLater } from './events/seeItLater.js'
 import { getLaterEvents } from './events/seeItLater.js'
 import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, makeFriendshipRequest } from './users/friends.js'
 import { searchUsers } from './users/searchUsers.js'
-import { createPost, getAllPosts, getPost, commentPost, getComments } from './communities/muro.js'
+import { createPost, getAllPosts, getPost, commentPost, getComments, like, dislike } from './communities/muro.js'
 import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGroupMembersToEvent,
     removeGroupRequest, addGroupRequestToUser } from './users/groups.js'
 import { sendEventMarks, addEventMark } from './users/eventMarks.js'
@@ -261,6 +261,14 @@ app.post('/comment', (req,res) => {
 
 app.get('/comments', (req,res) => {
     getComments(req.query.idPost, res)
+})
+
+app.post('/like' , (req, res) => {
+    like(req.query.idPost, res)
+})
+
+app.post('/dislike' , (req, res) => {
+    dislike(req.query.idPost, res)
 })
 
 app.get('/groups', (req, res) => {

@@ -1,5 +1,6 @@
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage"
 import { storage } from "./index.js";
+import { confirmPasswordReset } from "firebase/auth";
 
 export let fileURL
 
@@ -51,6 +52,31 @@ export async function replaceImagesWithURL_MssgCom(mssgC, com) {
     await getFileURL(`images/users/${mssgC.images}`)
     mssgC.images = fileURL
     objectWithURLs = mssgC
+}
+
+export async function replaceImagesWithURL_Post(post, res) {
+    let imagesURLs = []
+    for (let image of post.images) {
+        await getFileURL(`images/communities/posts/${image}`)            
+        imagesURLs.push(fileURL)
+    }
+    post.images = imagesURLs
+    objectWithURLs = post
+    res.send(objectWithURLs)
+}
+
+export async function sendCommentsWithImages(comments, res){
+
+    let objectsToSend = []
+
+    for (let comment of comments) {
+        await getFileURL(`images/communities/posts/${comment.images}`)            
+        comment.images = fileURL
+        objectWithURLs = comment
+        objectsToSend.push(comment)
+    }
+
+    res.send(objectsToSend)
 }
 
 export function uploadImage(file, path) {

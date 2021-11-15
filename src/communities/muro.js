@@ -1,9 +1,14 @@
 import { child, get, ref, set, update, push, getDatabase } from '@firebase/database'
 import { async } from '@firebase/util'
+import { objectWithURLs, replaceImagesWithURL_Post, uploadImage, sendCommentsWithImages } from '../images.js'
 import { rdb } from '../index.js'
+import { Message } from '../objects/message.js'
+import { Post } from '../objects/post.js'
 
 const rdbRef  = ref(rdb)
 const db = getDatabase()
+export let post
+
 
 export async function createPost(idCommunity, post, res) {
     const rdbRefC = ref(rdb,`communities/${idCommunity}/posts/`)
@@ -18,9 +23,12 @@ export async function createPost(idCommunity, post, res) {
         date : post.date,
         author : post.author,
         numComments : 0, 
-        images : post.images   
-    }).catch((error) => {console.error(error)})
+        images : post.images,
+        likes : post.likes,
+        dislikes : post.dislikes,
+        location : post.location,
 
+    }).catch((error) => {console.error(error)})
     res.send(idKey)
 
 }
@@ -40,16 +48,23 @@ export async function getPost(idPost, res) {
     const idCommunity = await getCommunityByPost(idPost)
     get(child(rdbRef,`communities/${idCommunity}/posts/${idPost}/`)).then((snapshot) => {
         if(snapshot.exists()){
-            let post = snapshot.val()
-            res.send(post)
+            post = snapshot.val()
+            if(typeof post.images == 'undefined'){
+                res.send(post)
+            }else{
+                replaceImagesWithURL_Post(post, res)
+            }
         }else{
-            res.send([])
+            post = []
+            res.send(post)
         }
     }).catch((error) => {console.error(error)})
 
 }
 
-export async function commentPost(idCommunity, idPost, author, comment, date, res) {
+export async function commentPost(idPost,message, res ) {
+    const idCommunity = await getCommunityByPost(idPost)
+
     const rdbRefP = ref(rdb,`communities/${idCommunity}/posts/${idPost}/comments`)
     const newRef = push(rdbRefP) 
     const idKey = newRef.key
@@ -57,9 +72,11 @@ export async function commentPost(idCommunity, idPost, author, comment, date, re
     set(newRef,
         {   
             id : idKey,
-            author : author,
-            comment : comment,
-            date : date,
+            userId : message.userId,
+            username : message.username, 
+            text : message.text,
+            dateTime : message.time,
+            images : message.images
         }).catch((error) => {console.error(error)}
     )
     
@@ -74,12 +91,20 @@ export async function commentPost(idCommunity, idPost, author, comment, date, re
 
 export async function getComments(idPost, res){  
     const idCommunity = await getCommunityByPost(idPost)
+    let images = []
 
-    await get(child(rdbRef,`communities/${idCommunity}/posts/${idPost}`)).then((snapshot) => {
-        if(snapshot.exists()){res.send(snapshot.val().comments)}
+    await get(child(rdbRef,`communities/${idCommunity}/posts/${idPost}/comments`)).then((snapshot) => {
+        if(snapshot.exists())
+        {
+            const comments = snapToArray(snapshot)
+
+            if(typeof comments.images == 'undefined'){
+                res.send(comments)
+            }else{
+                sendCommentsWithImages(comments,res)
+            }
+        }
     }).catch((error) => { console.error(error) })
-
-
 }   
 
 async function getCommunityByPost(idPost){
@@ -102,4 +127,43 @@ async function getCommunityByPost(idPost){
     }
 
     return idCommunity
+}
+
+
+export async function like(idPost, res){
+    const idCommunity = await getCommunityByPost(idPost)
+
+    await get(child(rdbRef,`communities/${idCommunity}/posts/${idPost}`)).then((snapshot) => {
+        if(snapshot.exists()){ 
+            const likes = 1 + snapshot.val().likes
+            update(child(rdbRef,`communities/${idCommunity}/posts/${idPost}`), {likes : likes })
+        }
+    }).catch((error) => { console.error(error) })  
+    res.send(idPost)
+}
+
+export async function dislike(idPost, res){
+    const idCommunity = await getCommunityByPost(idPost)
+
+    await get(child(rdbRef,`communities/${idCommunity}/posts/${idPost}`)).then((snapshot) => {
+        if(snapshot.exists()){ 
+            const dislikes = 1 + snapshot.val().dislikes
+            update(child(rdbRef,`communities/${idCommunity}/posts/${idPost}`), {dislikes : dislikes })
+        }
+    }).catch((error) => { console.error(error) })  
+    res.send(idPost)
+}
+
+
+function snapToArray(snapshot){
+    var returnArr = []
+
+    snapshot.forEach(function(childSnapshot) {
+        var item = childSnapshot.val()
+        item.key = childSnapshot.key
+
+        returnArr.push(item)
+    })
+
+    return returnArr
 }
