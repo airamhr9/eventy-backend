@@ -13,11 +13,15 @@ export function sendUserGroups(userId, res) {
             let groups = snapshot.val()            
             groups = Object.values(groups)
             for (let g of groups) {
+                if (g.unconfirmedUsers == undefined) {
+                    g.unconfirmedUsers = []
+                }
                 let groupUsersIds = Object.keys(g.users)
                 if (groupUsersIds.includes(userId)) {
                     let objectToSend = {}
                     objectToSend.id = g.id
                     objectToSend.users = []
+                    objectToSend.unconfirmedUsers = []
                     // Añadir nombre y foto a cada usuario para enviar
                     for (let u of Object.values(g.users)) {
                         await getUser(u.userId)
@@ -32,6 +36,15 @@ export function sendUserGroups(userId, res) {
                             "tags": u.tags || []
                         })
                     }
+                    for (let uid of g.unconfirmedUsers) {
+                        await getUser(uid)
+                        await replaceImagesWithURL_User(user)
+                        objectToSend.unconfirmedUsers.push({
+                            "id": uid,
+                            "username": objectWithURLs.username,
+                            "image": objectWithURLs.image
+                        })
+                    }
                     result.push(objectToSend)
                 }
             }
@@ -42,21 +55,29 @@ export function sendUserGroups(userId, res) {
     })
 }
 
-export function createGroup(userId1, userId2) {
+export function sendUserGroupRequests(userId, res) {
+    get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
+        let user = snapshot.val()
+        if (user.groupRequests == undefined) {
+            user.groupRequests = []
+        }
+        res.send(user.groupRequests)
+    })
+}
+
+export function createGroup(creatorId) {
     let refNewGroup = ref(rdb, 'groups')
     let newGroupId = push(refNewGroup).key
 
     set(ref(rdb, `groups/${newGroupId}`), {
-        id: newGroupId
+        id: newGroupId,
+        creator: creatorId
+    })
+    set(ref(rdb, `groups/${newGroupId}/users/${creatorId}`), {
+        userId: creatorId
     })
 
-    set(ref(rdb, `groups/${newGroupId}/users/${userId1}`), {
-        userId: userId1
-    })
-
-    set(ref(rdb, `groups/${newGroupId}/users/${userId2}`), {
-        userId: userId2
-    })
+    return newGroupId
 }
 
 export function updateGroup(groupId, data) {
@@ -80,5 +101,39 @@ export function addGroupMembersToEvent(groupId, eventId) {
             event.participants.push(userId)
         })
         update(ref(rdb, `events/${eventId}`), event)
+    })
+}
+
+export function addGroupRequestToUser(groupId, userId) {
+    get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
+        let user = snapshot.val()
+        if (user.groupRequests == undefined) {
+            user.groupRequests = []
+        }
+        user.groupRequests.push(groupId)
+        update(ref(rdb, `users/${user.id}`), user)
+    })
+
+    get(child(rdbRef, `groups/${groupId}`)).then((snapshot) => {
+        let group = snapshot.val()
+        if (group.unconfirmedUsers == undefined) {
+            group.unconfirmedUsers = []
+        }
+        group.unconfirmedUsers.push(userId)
+        update(ref(rdb, `groups/${groupId}`), group)
+    })
+}
+
+export function removeGroupRequest(groupId, userId) {
+    get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
+        let user = snapshot.val()
+        user.groupRequests = user.groupRequests.filter(element => element !== groupId)
+        update(ref(rdb, `users/${user.id}`), user)
+    })
+
+    get(child(rdbRef, `groups/${groupId}`)).then((snapshot) => {
+        let group = snapshot.val()
+        group.unconfirmedUsers = group.unconfirmedUsers.filter(element => element !== userId)
+        update(ref(rdb, `groups/${groupId}`), group)
     })
 }

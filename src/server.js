@@ -24,7 +24,8 @@ import { getLaterEvents } from './events/seeItLater.js'
 import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, makeFriendshipRequest } from './users/friends.js'
 import { searchUsers } from './users/searchUsers.js'
 import { createPost, getAllPosts, getPost, commentPost, getComments } from './communities/muro.js'
-import { sendUserGroups, createGroup, updateGroup, addGroupMembersToEvent } from './users/groups.js'
+import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGroupMembersToEvent,
+    removeGroupRequest, addGroupRequestToUser } from './users/groups.js'
 import { sendEventMarks, addEventMark } from './users/eventMarks.js'
 
 const app = express()
@@ -263,20 +264,37 @@ app.get('/comments', (req,res) => {
 })
 
 app.get('/groups', (req, res) => {
-    sendUserGroups(req.query.user, res)
+    if (req.query.type.toUpperCase() == 'JOINED') {
+        sendUserGroups(req.query.user, res)
+    } else if (req.query.type.toUpperCase() == 'REQUESTS') {
+        sendUserGroupRequests(req.query.user, res)
+    } else {
+        res.send('Operation not supported')
+    }    
 })
 
 app.post('/groups', (req, res) => {
-    createGroup(req.query.user1, req.query.user2)
+    let groupId = createGroup(req.query.creator)
+    addGroupRequestToUser(groupId, req.query.anotherUser)
     res.send()
 })
 
 app.put('/groups', (req, res) => {
-    if (req.query.event == undefined) {
-        updateGroup(req.query.group, req.body)
-    } else {
+    if (req.query.event != undefined) {
         addGroupMembersToEvent(req.query.group, req.query.event)
-    }    
+    } else if (req.query.op != undefined) {
+        if (req.query.op.toUpperCase() == 'REQUEST') {
+            addGroupRequestToUser(req.query.group, req.query.user)
+        } else if (req.query.op.toUpperCase() == 'REJECT') {
+            removeGroupRequest(req.query.group, req.query.user)
+        }
+    } else {
+        updateGroup(req.query.group, req.body)
+        if (req.query.user != undefined) {
+            // Se ha añadido un usuario
+            removeGroupRequest(req.query.group, req.query.user)
+        }
+    }
     res.send()
 })
 
