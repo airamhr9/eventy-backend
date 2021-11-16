@@ -27,6 +27,7 @@ import { createPost, getAllPosts, getPost, commentPost, getComments, like, disli
 import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGroupMembersToEvent,
     removeGroupRequest, addGroupRequestToUser } from './users/groups.js'
 import { sendEventMarks, addEventMark } from './users/eventMarks.js'
+import { filterByGroup } from './users/groupsFilter.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -304,6 +305,10 @@ app.put('/groups', (req, res) => {
         }
     }
     res.send()
+})
+
+app.get('/searchGroups', (req, res) => {
+    filterByGroup(res, "-MoFTZEEmvh2pyz8deeI")
 })
 
 app.listen(port, () => {
