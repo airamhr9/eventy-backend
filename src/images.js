@@ -1,6 +1,7 @@
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage"
 import { storage } from "./index.js";
 import { confirmPasswordReset } from "firebase/auth";
+import { post } from "./communities/muro.js";
 
 export let fileURL
 
@@ -68,12 +69,35 @@ export async function replaceImagesWithURL_Post(post, res) {
 export async function sendCommentsWithImages(comments, res){
 
     let objectsToSend = []
-
     for (let comment of comments) {
-        await getFileURL(`images/communities/posts/${comment.images}`)            
-        comment.images = fileURL
-        objectWithURLs = comment
-        objectsToSend.push(comment)
+        const path = `images/communities/posts/${comment.images}`
+        await getFileURL(path)
+        if(fileURL == `File <${path}> does not exist` ){
+            objectsToSend.push(comment)
+        }else{
+            comment.images = fileURL
+            objectWithURLs = comment
+            objectsToSend.push(comment)
+        }      
+    }
+
+    res.send(objectsToSend)
+}
+
+export async function sendPostsWithImages(posts, res){
+    let objectsToSend = []
+
+    for(let post of posts) {
+        const path = `images/communities/posts/${post.images}`
+        await getFileURL(path)
+
+        if(fileURL == `File <${path}> does not exist` ){
+            objectsToSend.push(post)
+        }else{
+            post.images = fileURL
+            objectWithURLs = post
+            objectsToSend.push(objectWithURLs)
+        }      
     }
 
     res.send(objectsToSend)

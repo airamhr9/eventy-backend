@@ -1,6 +1,6 @@
 import { child, get, ref, set, update, push, getDatabase } from '@firebase/database'
 import { async } from '@firebase/util'
-import { objectWithURLs, replaceImagesWithURL_Post, uploadImage, sendCommentsWithImages } from '../images.js'
+import { objectWithURLs, replaceImagesWithURL_Post, uploadImage, sendCommentsWithImages, sendPostsWithImages } from '../images.js'
 import { rdb } from '../index.js'
 import { Message } from '../objects/message.js'
 import { Post } from '../objects/post.js'
@@ -36,8 +36,8 @@ export async function createPost(idCommunity, post, res) {
 export async function getAllPosts(idCommunity, res) {
     get(child(rdbRef,`communities/${idCommunity}/posts/`)).then((snapshot) => {
         if(snapshot.exists()){
-            let posts = snapshot.val()
-            res.send(posts)
+            const posts = snapToArray(snapshot)
+            sendPostsWithImages(posts,res)
         }else{
             res.send([])
         }
@@ -97,12 +97,7 @@ export async function getComments(idPost, res){
         if(snapshot.exists())
         {
             const comments = snapToArray(snapshot)
-
-            if(typeof comments.images == 'undefined'){
-                res.send(comments)
-            }else{
-                sendCommentsWithImages(comments,res)
-            }
+            sendCommentsWithImages(comments,res)
         }
     }).catch((error) => { console.error(error) })
 }   
