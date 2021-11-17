@@ -26,7 +26,7 @@ import { searchUsers } from './users/searchUsers.js'
 import { createPost, getAllPosts, getPost, commentPost, getComments, like, dislike } from './communities/muro.js'
 import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGroupMembersToEvent,
     removeGroupRequest, addGroupRequestToUser } from './users/groups.js'
-import { sendEventMarks, addEventMark } from './users/eventMarks.js'
+import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
 
 const app = express()
@@ -120,8 +120,6 @@ app.get('/users', async (req, res) => {
             result.push(objectWithURLs)
         }
         res.send(result)
-    } else if (req.query.eventMarks != undefined) {
-        sendEventMarks(req.query.user, res)
     } else {
         await getUser(req.query.id)
         user.imageName = user.image
@@ -133,8 +131,6 @@ app.get('/users', async (req, res) => {
 app.put('/users', (req, res) => {
     if (req.query.preferences != undefined) {
         setUserPreferences(req.query.id, req.body)
-    } else if (req.query.mark != undefined) {
-        addEventMark(req.query.user, req.query.event, req.query.mark)
     } else {
         updateUser(req.body)
     }
@@ -309,6 +305,15 @@ app.put('/groups', (req, res) => {
 
 app.get('/searchGroups', (req, res) => {
     filterByGroup(res, "-MoFTZEEmvh2pyz8deeI")
+})
+
+app.get('/eventScores', (req, res) => {
+    sendUserEventScore(req.query.user, req.query.event, res)
+})
+
+app.post('/eventScores', (req, res) => {
+    addEventScore(req.query.user, req.query.event, parseFloat(req.query.score))
+    res.send()
 })
 
 app.listen(port, () => {

@@ -25,7 +25,8 @@ export class DatabaseManager {
             startDate : eventToUpload.getStartDate(),
             summary : eventToUpload.getSummary(),
             tags : eventToUpload.getTags(),
-            community : eventToUpload.getCommunity()
+            community : eventToUpload.getCommunity(),
+            averageScore : 0
         } )
     }
 
