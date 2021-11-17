@@ -311,8 +311,8 @@ app.get('/eventScores', (req, res) => {
     sendUserEventScore(req.query.user, req.query.event, res)
 })
 
-app.get('/eventScores', (req, res) => {
-    addEventScore(req.query.user, req.query.event)
+app.post('/eventScores', (req, res) => {
+    addEventScore(req.query.user, req.query.event, req.query.score)
     res.send()
 })
 

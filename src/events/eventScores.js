@@ -1,4 +1,4 @@
-import { child, get, ref, set } from '@firebase/database'
+import { child, get, ref, update } from '@firebase/database'
 import { rdb } from '../index.js'
 import { getEvent, event } from './participants.js'
 
@@ -14,11 +14,15 @@ export async function sendUserEventScore(userId, eventId, res) {
             }
         })
     }
-    res.send(score)
+    let data = {
+        userScore: score,
+        averageScore: event.averageScore
+    }
+    res.send(data)
 }
 
 export function addEventScore(userId, eventId, score) {
-    let path = `event/${eventId}`
+    let path = `events/${eventId}`
     get(child(rdbRef, path)).then(snapshot => {
         let event = snapshot.val()
         if (event.scores == undefined) {
@@ -29,7 +33,7 @@ export function addEventScore(userId, eventId, score) {
             'score': score
         }
         event.scores.push(data)
-        event.averageScore = (event.averageScore * (event.scores.length() - 1) + score) / event.scores.length()
-        set(ref(rdb, path), event)
+        event.averageScore = (event.averageScore * (event.scores.length - 1) + score) / event.scores.length
+        update(ref(rdb, path), event)
     })   
 }
