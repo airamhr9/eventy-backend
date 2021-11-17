@@ -28,12 +28,25 @@ export function addEventScore(userId, eventId, score) {
         if (event.scores == undefined) {
             event.scores = []
         }
+        event.scores = remvoveExistingScore(event.scores, userId)
         let data = {
             'user': userId,
             'score': score
         }
         event.scores.push(data)
-        event.averageScore = (event.averageScore * (event.scores.length - 1) + score) / event.scores.length
+        event.averageScore = calculateAverage(event.scores)
         update(ref(rdb, path), event)
     })   
+}
+
+function remvoveExistingScore(scores, userId) {
+    return scores.filter(element => element.user != userId)
+}
+
+function calculateAverage(scores) {
+    console.log(scores)
+    let average = 0
+    scores.forEach(element => average += element.score)
+    average /= scores.length
+    return average
 }
