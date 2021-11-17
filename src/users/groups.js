@@ -107,22 +107,26 @@ export function addGroupMembersToEvent(groupId, eventId) {
     })
 }
 
-export function addGroupRequestToUser(groupId, userId) {
-    get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
-        let user = snapshot.val()
-        if (user.groupRequests == undefined) {
-            user.groupRequests = []
-        }
-        user.groupRequests.push(groupId)
-        update(ref(rdb, `users/${user.id}`), user)
-    })
+export function addGroupRequestToUsers(groupId, usersIds) {
+    for (let uid of usersIds) {
+        get(child(rdbRef, `users/${uid}`)).then((snapshot) => {
+            let user = snapshot.val()
+            if (user.groupRequests == undefined) {
+                user.groupRequests = []
+            }
+            user.groupRequests.push(groupId)
+            update(ref(rdb, `users/${uid}`), user)
+        })
+    }
 
     get(child(rdbRef, `groups/${groupId}`)).then((snapshot) => {
         let group = snapshot.val()
         if (group.unconfirmedUsers == undefined) {
             group.unconfirmedUsers = []
         }
-        group.unconfirmedUsers.push(userId)
+        for (let uid of usersIds) {
+            group.unconfirmedUsers.push(uid)
+        }
         update(ref(rdb, `groups/${groupId}`), group)
     })
 }

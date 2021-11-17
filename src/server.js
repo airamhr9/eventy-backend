@@ -25,7 +25,7 @@ import { getFriends, friendsAndFriendshipRequests, beFriends, notBeFriends, make
 import { searchUsers } from './users/searchUsers.js'
 import { createPost, getAllPosts, getPost, commentPost, getComments, like, dislike } from './communities/muro.js'
 import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGroupMembersToEvent,
-    removeGroupRequest, addGroupRequestToUser } from './users/groups.js'
+    removeGroupRequest, addGroupRequestToUsers } from './users/groups.js'
 import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
 
@@ -280,7 +280,7 @@ app.get('/groups', (req, res) => {
 
 app.post('/groups', (req, res) => {
     let groupId = createGroup(req.query.creator)
-    addGroupRequestToUser(groupId, req.query.anotherUser)
+    addGroupRequestToUsers(groupId, [req.query.anotherUser])
     res.send()
 })
 
@@ -289,7 +289,7 @@ app.put('/groups', (req, res) => {
         addGroupMembersToEvent(req.query.group, req.query.event)
     } else if (req.query.op != undefined) {
         if (req.query.op.toUpperCase() == 'REQUEST') {
-            addGroupRequestToUser(req.query.group, req.query.user)
+            addGroupRequestToUsers(req.query.group, req.body)
         } else if (req.query.op.toUpperCase() == 'REJECT') {
             removeGroupRequest(req.query.group, req.query.user)
         }
