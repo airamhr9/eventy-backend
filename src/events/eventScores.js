@@ -44,7 +44,6 @@ function remvoveExistingScore(scores, userId) {
 }
 
 function calculateAverage(scores) {
-    console.log(scores)
     let average = 0
     scores.forEach(element => average += element.score)
     average /= scores.length

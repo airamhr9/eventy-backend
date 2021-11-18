@@ -58,12 +58,26 @@ export function sendUserGroups(userId, res) {
 }
 
 export function sendUserGroupRequests(userId, res) {
-    get(child(rdbRef, `users/${userId}`)).then((snapshot) => {
+    get(child(rdbRef, `users/${userId}`)).then(async (snapshot) => {
         let user = snapshot.val()
         if (user.groupRequests == undefined) {
             user.groupRequests = []
         }
-        res.send(user.groupRequests)
+        let result = []        
+        for (let grouId of user.groupRequests) {
+            await get(child(rdbRef, `groups/${grouId}`)).then(async (snapshotGroup) => {
+                let groupCreatorId = snapshotGroup.val().creator
+                await get(child(rdbRef, `users/${groupCreatorId}`)).then(async (snapshotCreator) => {
+                    let groupCreator = snapshotCreator.val()
+                    await replaceImagesWithURL_User(groupCreator)
+                    result.push({
+                        group: grouId,
+                        groupCreator: objectWithURLs
+                    })
+                })
+            })
+        }
+        res.send(result)
     })
 }
 
