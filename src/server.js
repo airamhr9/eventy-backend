@@ -28,6 +28,7 @@ import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGro
     removeGroupRequest, addGroupRequestToUsers } from './users/groups.js'
 import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
+import { stdout } from 'process'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -278,9 +279,10 @@ app.get('/groups', (req, res) => {
     }    
 })
 
-app.post('/groups', (req, res) => {
+app.post('/groups/:ids', (req, res) => {
+    stdout.write(req.params.ids);
     let groupId = createGroup(req.query.creator)
-    addGroupRequestToUsers(groupId, [req.query.anotherUser])
+    addGroupRequestToUsers(groupId, req.params.ids.split(","))
     res.send()
 })
 
