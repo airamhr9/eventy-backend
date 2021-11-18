@@ -14,10 +14,10 @@ export async function sendUserEventScore(userId, eventId, res) {
             }
         })
     }
-    let data = {
-        userScore: score,
-        averageScore: event.averageScore
-    }
+    let data = [
+        score,
+        event.averageScore
+    ]
     res.send(data)
 }
 
