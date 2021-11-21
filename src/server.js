@@ -306,7 +306,7 @@ app.put('/groups', (req, res) => {
 })
 
 app.get('/searchGroups', (req, res) => {
-    filterByGroup(res, "-MoFTZEEmvh2pyz8deeI")
+    filterByGroup(res, req.query.groupId)
 })
 
 app.get('/eventScores', (req, res) => {
