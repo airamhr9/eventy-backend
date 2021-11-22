@@ -297,10 +297,6 @@ app.put('/groups', (req, res) => {
         }
     } else {
         updateGroup(req.query.group, req.body)
-        if (req.query.user != undefined) {
-            // Se ha añadido un usuario
-            removeGroupRequest(req.query.group, req.query.user)
-        }
     }
     res.send()
 })

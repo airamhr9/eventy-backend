@@ -100,14 +100,17 @@ export function createGroup(creatorId) {
 export function updateGroup(groupId, data) {
     let path = `groups/${groupId}/users/${data.userId}`
     get(child(rdbRef, path)).then((snapshot) => {
-            if (snapshot.exists()) {
-                update(ref(rdb, path), data)
-            } else {
-                set(ref(rdb, path), data)
-            }
-        }).catch((error) => {
-            console.error(error)
-    });
+        if (snapshot.exists()) {
+            update(ref(rdb, path), data)
+        } else {
+            // Un usuario acepta la invitacion
+            set(ref(rdb, path), data).then(() => {
+                removeGroupRequest(groupId, data.userId)
+            })
+        }
+    }).catch((error) => {
+        console.error(error)
+    })
 }
 
 export function addGroupMembersToEvent(groupId, eventId) {
