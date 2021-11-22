@@ -242,7 +242,7 @@ app.get('/searchUsers', (req, res) => {
 })
 
 app.post('/post', (req,res) => {
-    createPost(req.quey.idCommunity, req.query.post, res)
+    createPost(req.body.idCommunity, req.body.post, res)
 })
 
 app.get('/allPosts', (req,res) => {
