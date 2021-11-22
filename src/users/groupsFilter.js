@@ -88,17 +88,16 @@ function recommendToGroups(groupMaxDates, groupMinDates, groupPrices, groupTags,
             let minPrice = Math.min.apply(null, groupPrices)
 
             for (const evnt in events) {
-                if(events[evnt] != undefined && findCommonElements(events[evnt].tags, groupTags) && events[evnt].private == false){
+                if(events[evnt] != undefined && findCommonElements(events[evnt].tags, groupTags) && events[evnt].private == false && new Date(events[evnt].finishDate) > new Date(Date.now())){
                     foundEvents.push(events[evnt])
                 }
-                else if(events[evnt] == undefined && events[evnt].private == false && groupTags == []){
+                else if(events[evnt] == undefined && events[evnt].private == false && groupTags.length == 0 && new Date(events[evnt].finishDate) > new Date(Date.now())){
                     foundEvents.push(events[evnt])
                 }
-                else if(events[evnt].tags != undefined && events[evnt].private == false && groupTags == []){
+                else if(events[evnt].tags != undefined && events[evnt].private == false && groupTags.length == 0 && new Date(events[evnt].finishDate) > new Date(Date.now())){
                     foundEvents.push(events[evnt])
                 }
             }
-
             let result = filterWithSelected(maxStartDate, minFinishDate, minPrice, foundEvents)
 
             if(result.length > 0){
@@ -119,7 +118,12 @@ function recommendToGroups(groupMaxDates, groupMinDates, groupPrices, groupTags,
 
 function getMaxDate(arrDates){
     try{
-        return new Date(Math.max.apply(null, arrDates))
+        if(arrDates.length != 0){
+            return new Date(Math.max.apply(null, arrDates))
+        }
+        else{
+            return undefined
+        }
     }
     catch(error){
         return "te jodes"
@@ -128,7 +132,12 @@ function getMaxDate(arrDates){
 
 function getMinDate(arrDates){
     try{
-        return new Date(Math.min.apply(null, arrDates))
+        if(arrDates.length != 0){
+            return new Date(Math.min.apply(null, arrDates))
+        }
+        else{
+            return undefined
+        }
     }
     catch(error){
         return "te jodes pero menos"
@@ -141,6 +150,9 @@ function extractMax(arr){
         if(index > -1){
             arr.splice(index, 1)
             return arr
+        }
+        else{
+            return undefined
         }
          
     }
@@ -176,7 +188,9 @@ function filterWithSelected(maxSDate, minFDate, minPrice, eventList){
     let filteredEvents = []
 
     for (const key in eventList) {
-        if(new Date(eventList[key].startDate) >= maxSDate && new Date(eventList[key].finishDate) <= minFDate && parseFloat(eventList[key].price) <= minPrice) {
+        if((new Date(eventList[key].startDate) >= maxSDate || maxSDate == undefined) 
+        && (new Date(eventList[key].finishDate) <= minFDate || minFDate == undefined) 
+        && (parseFloat(eventList[key].price) <= minPrice || minPrice == undefined)) {
             filteredEvents.push(eventList[key])            
         }
     }
