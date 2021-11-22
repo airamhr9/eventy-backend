@@ -126,7 +126,7 @@ function getMaxDate(arrDates){
         }
     }
     catch(error){
-        return "te jodes"
+        return undefined
     }
 }
 
@@ -140,7 +140,7 @@ function getMinDate(arrDates){
         }
     }
     catch(error){
-        return "te jodes pero menos"
+        return undefined
     }
 }
 
@@ -186,7 +186,9 @@ function findCommonElements(arr1, arr2) {
 
 function filterWithSelected(maxSDate, minFDate, minPrice, eventList){
     let filteredEvents = []
-
+    console.log(maxSDate)
+    console.log(minFDate)
+    console.log(minPrice)
     for (const key in eventList) {
         if((new Date(eventList[key].startDate) >= maxSDate || maxSDate == undefined) 
         && (new Date(eventList[key].finishDate) <= minFDate || minFDate == undefined) 
