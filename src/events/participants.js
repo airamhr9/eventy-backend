@@ -1,7 +1,7 @@
 import { child, get, ref } from '@firebase/database'
 import { rdb } from '../index.js'
 import { getUser, user } from '../users/userProfile.js'
-import { replaceImagesWithURL_User, objectWithURLs } from '../images.js'
+import { replaceImagesWithURL_User, replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
@@ -79,5 +79,10 @@ export async function sendListUserFutureEvents(userId, res) {
             futureEvents.push(ev)
         }
     }
-    res.send(futureEvents)
+    let result = []
+    for (let ev of futureEvents) {
+        await replaceImagesWithURL_Event(ev)
+        result.push(objectWithURLs)
+    }
+    res.send(result)
 }
