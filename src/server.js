@@ -256,7 +256,8 @@ app.get('/post', (req,res) => {
 })
 
 app.post('/comment', (req,res) => {
-    commentPost(req.query.idCommunity, req.query.idPost, req.query.author, req.query.comment, req.query.date, res)
+    let message = req.body;
+    commentPost(req.query.idPost, message, res)
 })
 
 app.get('/comments', (req,res) => {
