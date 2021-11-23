@@ -182,6 +182,8 @@ app.post('/images', upload.single('photo'), (req, res) => {
             uploadImage(data, `users/${req.query.name}`)
         } else if (req.query.type == 'event') {
             uploadImage(data, `events/${req.query.name}`)
+        } else if (req.query.type == 'post') {
+            uploadImage(data, `posts/${req.query.name}`)
         } else {
             uploadImage(data, `communities/${req.query.name}`)
         }
