@@ -117,3 +117,35 @@ async function returnEvents(res, events){
     return "no se pudo enviar"
   }
 }
+
+export function searchT(searchText, searchTags, filters, enableFilt, res){
+  get(child(rdbRef, 'events/')).then((snapshot) =>{
+    if(snapshot.exists()){
+      let result = []
+      let events = snapshot.val()
+
+      events.forEach(element => {
+        if (element.participants == undefined) {
+          element.participants = []
+        }
+
+        let names = makeLowerCase(element.name)
+        let tags = element.tags
+
+        if(names.includes(makeLowerCase(searchText))){
+          if(element.tags != undefined && findCommonElements(tags, searchTags) && element.private == false){
+            result.push(element)
+          }
+          else if(element.tags == undefined && element.private == false && searchTags == []){
+            result.push(element)
+          }
+          else if(element.tags != undefined && element.private == false && searchTags == []){
+            result.push(element)
+          }
+        }
+      })
+      if(enableFilt == undefined){ return result}
+      else{filter(filters, result, res)}
+    }
+  })
+}
