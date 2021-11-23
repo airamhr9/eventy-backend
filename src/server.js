@@ -9,7 +9,8 @@ import { getUserPreferences, setUserPreferences } from './users/userPreferences.
 import { getUser, updateUser, user } from './users/userProfile.js'
 import { createCommunity, getCommunityById, community, listUserCommunities, userCommunities, joinCommunity
     } from './communities/community.js'
-import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents } from './events/participants.js'
+import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents, 
+    sendListUserFutureEvents } from './events/participants.js'
 import { publishEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
@@ -121,6 +122,8 @@ app.get('/users', async (req, res) => {
             result.push(objectWithURLs)
         }
         res.send(result)
+    } else if (req.query.futureEvents != undefined) {
+        sendListUserFutureEvents(req.query.userId, res)
     } else {
         await getUser(req.query.id)
         user.imageName = user.image
@@ -286,7 +289,7 @@ app.post('/groups/:ids', (req, res) => {
     stdout.write(req.params.ids);
     let groupId = createGroup(req.query.creator)
     addGroupRequestToUsers(groupId, req.params.ids.split(","))
-    res.send()
+    res.send(groupId)
 })
 
 app.put('/groups', (req, res) => {

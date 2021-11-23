@@ -69,3 +69,15 @@ export async function listUserOlderEvents(userId) {
         }
     }
 }
+
+export async function sendListUserFutureEvents(userId, res) {
+    await getEvents()
+    let futureEvents = []
+    let now = new Date().toISOString()
+    for (let ev of allEvents) {
+        if (ev.participants.includes(userId) && ev.finishDate.localeCompare(now) > 0) {
+            futureEvents.push(ev)
+        }
+    }
+    res.send(futureEvents)
+}
