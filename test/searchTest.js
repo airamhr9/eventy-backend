@@ -1,19 +1,18 @@
-import { search } from '../src/search/search.js'
+import { searchT } from '../src/search/search.js'
 import { expect } from 'chai'
 
 
-var paramsTest, expectedLength, expectedMembers, aux
+var paramsTest, expectedLength, expectedMembers
 
 describe('#searchTest()', function(){
 
     this.beforeAll(function(){
-        //[searchText, searchTags, filters, enableFilt, res]
+        //[searchText, searchTags, filters, enableFilt]
         paramsTest = [
             '',
             ['Museo', 'Fiesta', 'Relax'],
             [],
-            undefined,
-            aux
+            undefined
         ]
 
         expectedLength = 7
@@ -189,24 +188,19 @@ describe('#searchTest()', function(){
           }]
     })
 
-    it('return all the events', function(done){
-       search('', [], [], undefined, aux)
-        
-        expect(aux).to.have.lengthOf(10) //all the events at the BD (23/11/2021)
-        
-        done()
-        
+    it('return all the events', async function(){
+      searchT('', [], [], undefined).then(function(res){
+        expect(res).to.have.lengthOf(10) //all the events at the BD (23/11/2021)
+      })
     })
 
-    it('return expected events from DB', async function(done){
-        search(paramsTest[0], paramsTest[1], paramsTest[2], paramsTest[3], aux)
-        console.log(aux)
+    it('return expected events from DB', async function(){
+      searchT(paramsTest[0], paramsTest[1], paramsTest[2], paramsTest[3]).then(function(result){
+        expect(result).to.exist //the result is at least generated
+        expect(result).to.have.lengthOf(expectedLength) //the result must have 7 events 
+        expect(result).to.have.members(expectedMembers) //the result must contain this events  
+      })
             
-        expect(aux).to.exist //the result is at least generated
-        expect(aux).to.have.lengthOf(expectedLength) //the result must have 7 events 
-        expect(aux).to.have.members(expectedMembers) //the result must contain this events
-            
-        done()
- 
+               
     })
 })

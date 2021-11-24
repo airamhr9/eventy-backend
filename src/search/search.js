@@ -118,34 +118,33 @@ async function returnEvents(res, events){
   }
 }
 
-export function searchT(searchText, searchTags, filters, enableFilt, res){
+export async function searchT(searchText, searchTags, filters, enableFilt){ //version for testing with return
   get(child(rdbRef, 'events/')).then((snapshot) =>{
     if(snapshot.exists()){
       let result = []
       let events = snapshot.val()
 
-      events.forEach(element => {
-        if (element.participants == undefined) {
-          element.participants = []
+      for (const key in events) {
+        if (events[key].participants == undefined) {
+          events[key].participants = []
         }
 
-        let names = makeLowerCase(element.name)
-        let tags = element.tags
+        let names = makeLowerCase(events[key].name)
+        let tags = events[key].tags
 
         if(names.includes(makeLowerCase(searchText))){
-          if(element.tags != undefined && findCommonElements(tags, searchTags) && element.private == false){
-            result.push(element)
+          if(events[key].tags != undefined && findCommonElements(tags, searchTags) && events[key].private == false){
+            result.push(events[key])
           }
-          else if(element.tags == undefined && element.private == false && searchTags == []){
-            result.push(element)
+          else if(events[key].tags == undefined && events[key].private == false && searchTags == []){
+            result.push(events[key])
           }
-          else if(element.tags != undefined && element.private == false && searchTags == []){
-            result.push(element)
+          else if(events[key].tags != undefined && events[key].private == false && searchTags == []){
+            result.push(events[key])
           }
         }
-      })
-      if(enableFilt == undefined){ return result}
-      else{filter(filters, result, res)}
+      }
+      return result
     }
   })
 }
