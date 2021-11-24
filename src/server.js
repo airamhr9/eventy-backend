@@ -30,6 +30,7 @@ import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGro
 import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
 import { stdout } from 'process'
+import { createMemory, getMemories } from './events/memories.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -187,6 +188,8 @@ app.post('/images', upload.single('photo'), (req, res) => {
             uploadImage(data, `events/${req.query.name}`)
         } else if (req.query.type == 'post') {
             uploadImage(data, `communities/posts/${req.query.name}`)
+        }else if (req.query.type == 'memory') {
+            uploadImage(data, `events/memories/${req.query.name}`)
         } else {
             uploadImage(data, `communities/${req.query.name}`)
         }
@@ -257,6 +260,14 @@ app.get('/allPosts', (req,res) => {
 app.get('/post', (req,res) => {
     getPost(req.query.idPost, res)
 })
+
+app.post('/memory', (req,res) => {
+    createMemory(req.query.eventId, req.query.text, req.query.author, req.query.images, res)
+})//-------------------------------------------------------------------------
+
+app.get('/memories', (req,res) => {
+    getMemories(req.query.eventId, res)
+})//-------------------------------------------------------------------------
 
 app.post('/comment', (req,res) => {
     let message = req.body;

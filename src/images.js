@@ -103,6 +103,23 @@ export async function sendPostsWithImages(posts, res){
     res.send(objectsToSend)
 }
 
+export async function sendMemoriesWithImages(memories, res){
+    let objectsToSend = []
+    for(let memory of memories) {
+        const path = `images/events/memories/${memory.images}`
+        await getFileURL(path)
+
+        if(fileURL == `File <${path}> does not exist` ){
+            objectsToSend.push(memory)
+        }else{
+            memory.images = fileURL
+            objectWithURLs = memory
+            objectsToSend.push(objectWithURLs)
+        }      
+    }
+    res.send(objectsToSend)
+}
+
 export function uploadImage(file, path) {
     let extension = path.split('.')
     extension = extension[extension.length - 1]
