@@ -3,6 +3,26 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
+export function sendSurvey(eventId, surveyId, res) {
+    get(child(rdbRef, `events/${eventId}/surveys/${surveyId}`)).then(snapshot => {
+        let survey = snapshot.val()
+
+        /*
+        result = {
+            id,
+            votes,
+            question,
+            options: {
+                text,
+                users,
+                porcentaje -> CALCULAR
+            }
+        }
+        */
+
+    })
+}
+
 export function addSurveyToEvent(eventId, surveyData) {
     let path = `events/${eventId}/surveys`
     let newSurveyId = push(child(rdbRef, path)).key
