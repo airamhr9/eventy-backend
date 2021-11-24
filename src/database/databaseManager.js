@@ -30,8 +30,32 @@ export class DatabaseManager {
         } )
     }
 
-    addParticipantToEvent(eventId, userId, confirmed) {
-        get(child(rdbRef,`events/${eventId}/`)).then((snapshot) => {
+    uploadEventT(eventToUpload, id){
+        eventToUpload instanceof Event
+        set(ref(rdb,`events/${id}`),{
+            description : eventToUpload.getDescription(),
+            finishDate : eventToUpload.getFinishDate(),
+            id : id,
+            images : eventToUpload.getImages(),
+            latitude : eventToUpload.getLatitude(),
+            longitude : eventToUpload.getLongitude(),
+            maxParticipants : eventToUpload.getMaxParticipants(),
+            name : eventToUpload.getName(),
+            owner : eventToUpload.getOwner(),
+            participants: eventToUpload.getParticipants(),
+            price : eventToUpload.getPrice(),
+            private : eventToUpload.getPrivate(),
+            startDate : eventToUpload.getStartDate(),
+            summary : eventToUpload.getSummary(),
+            tags : eventToUpload.getTags(),
+            community : eventToUpload.getCommunity(),
+            averageScore : 0
+        } )
+    }
+
+
+    async addParticipantToEvent(eventId, userId, confirmed) {
+        await get(child(rdbRef,`events/${eventId}/`)).then((snapshot) => {
             let event = snapshot.val()
             if (confirmed) {
                 if (event.participants == undefined) {

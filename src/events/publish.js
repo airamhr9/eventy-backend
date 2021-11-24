@@ -28,3 +28,10 @@ async function generateEventId() {
             console.error(error)
     });
 }
+
+export async function publishEventT(id, description, finishDate, images, latitude, longitude, maxParticipants, name, owner,
+    price, isPrivate, startDate, summary, tags) { 
+    const newEvent = new Event(description, finishDate, nextEventId, images, latitude, longitude, maxParticipants,
+        name, owner, price, isPrivate, startDate, summary, tags)
+    dbm.uploadEventT(newEvent, id)
+}

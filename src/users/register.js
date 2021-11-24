@@ -46,3 +46,31 @@ export async function register(userName, userPassword, userMail, userBirthDate,r
         })
     }
 }
+
+export async function registerT(id, userName, userPassword, userMail, userBirthDate) {
+
+    await searchUserByUsername(userName)
+
+    if (existsUsername) {
+        return ("Nombre de usuario existente")
+    } else {
+
+        await createUserWithEmailAndPassword(auth, userMail, userPassword).then(async (userCredential) => {
+
+            await set(ref(rdb,`users/${id}`),{
+                bio : "",
+                birthdate : userBirthDate,
+                email : userMail,
+                id : id,
+                image : "userImg.jpg",
+                password : userPassword,
+                preferences : [],
+                username : userName
+                })
+        }).catch((error) => {
+            return "Email existente"
+        })
+    }
+
+    return id
+}

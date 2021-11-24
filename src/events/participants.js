@@ -57,6 +57,49 @@ async function getEvents() {
     });
 }
 
+
+
+
+export async function getEventParticipantsT(eventId) {
+
+    await getEventT(eventId)
+
+    let confirmedParticipants = []
+    let possiblyParticipants = []
+
+    for (let userId of event.participants) {
+        confirmedParticipants.push(userId)
+    }
+    for (let userId of event.possiblyParticipants) {
+        possiblyParticipants.push(userId)
+    }
+
+    eventParticipants = [confirmedParticipants, possiblyParticipants]
+
+    return(eventParticipants)
+}
+
+
+export async function getEventT(eventId) {
+
+    await get(child(rdbRef, `events/${eventId}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+
+            event = snapshot.val()
+            if (event.participants == undefined) {
+                event.participants = []
+            }
+            if (event.possiblyParticipants == undefined) {
+                event.possiblyParticipants = []
+            }
+        } else {
+            event = null
+        }
+    }).catch((error) => {
+        console.error(error)
+    })
+}
+
 export let userOlderEvents
 
 export async function listUserOlderEvents(userId) {
