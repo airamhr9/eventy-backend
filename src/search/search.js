@@ -144,7 +144,60 @@ export async function searchT(searchText, searchTags, filters, enableFilt){ //ve
           }
         }
       }
-      return result
+      if(enableFilt == true){
+          return filterT(filters, result)
+      }
+      else{
+        return result
+      }
     }
   })
+}
+
+function filterT(filters, searchedEvents){
+  let resultFilter = []
+  searchedEvents.forEach(element => {
+    let sDate = new Date(element.startDate).getDate()
+    let fDate = new Date(element.finishDate).getDate()
+    let pr = element.price
+    let loc = [element.latitude, element.longitude]
+
+    if(filters[1] == undefined || filters[1] == ""){
+      filters[1] = new Date(Date.now()).toISOString()
+    }
+
+    if(filters[0] == true){
+      if(new Date(filters[1]).getDate() <= sDate && new Date(filters[2]).getDate() >= fDate && sDate == fDate){ //entre las fechas ini y fin del filtro y que solo dure un dia
+        if((filters[3] >= pr || filters[3] == undefined) && (pr >= filters[5] || filters[5] == undefined)){
+          if(plusMinus(filters[4], loc, 0.2) != false || filters[4].includes(undefined)){
+            resultFilter.push(element)
+          }
+        }
+      }
+      else if(new Date(filters[1]).getDate() <= sDate && filters[2] == undefined && sDate == fDate){ //a partir de la fecha actual y que dure solo un dia
+        if((filters[3] >= pr || filters[3] == undefined) && (pr >= filters[5] || filters[5] == undefined)){
+          if(plusMinus(filters[4], loc, 0.2) != false || filters[4].includes(undefined)){
+            resultFilter.push(element)
+          }
+        }
+      }
+    }
+    else{
+      if(new Date(filters[1]).getDate() <= sDate && new Date(filters[2]).getDate() >= fDate){ // entre las fechas ini y fin del filtro
+        if((filters[3] >= pr || filters[3] == undefined) && (pr >= filters[5] || filters[5] == undefined)){
+          if(plusMinus(filters[4], loc, 0.2) != false || filters[4].includes(undefined)){
+            resultFilter.push(element)
+          }
+        }
+      }
+      else if(new Date(filters[1]).getDate() <= sDate && filters[2] == undefined){ //a partir de la fecha actual
+        if((filters[3] >= pr || filters[3] == undefined) && (pr >= filters[5] || filters[5] == undefined)){
+          if(plusMinus(filters[4], loc, 0.2) != false || filters[4].includes(undefined)){
+            resultFilter.push(element)
+          }
+        } 
+      }
+    }
+  })
+  return resultFilter
 }

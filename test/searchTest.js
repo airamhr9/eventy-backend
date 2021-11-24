@@ -2,7 +2,7 @@ import { searchT } from '../src/search/search.js'
 import { expect } from 'chai'
 
 
-var paramsTest, expectedLength, expectedMembers
+var paramsTest, expectedLength, expectedMembers, paramsFilt, expectedMembersFilt, expectedLengthFilt
 
 describe('#searchTest()', function(){
 
@@ -55,7 +55,7 @@ describe('#searchTest()', function(){
           }, {
             "averageScore" : 0,
             "description" : "La biblioteca de la etsinf regala libros de ediciones antiguas, ven a recoger el que te apetezca",
-            "finishDate" : "2021-10-21T11:25:55.894718",
+            "finishDate" : "2021-12-21T11:25:55.894718",
             "id" : 3,
             "images" : [ "scaled_image_picker2154400090595674564.jpg" ],
             "latitude" : 39.4830058424561,
@@ -186,6 +186,54 @@ describe('#searchTest()', function(){
             "summary" : "Pasear perros por el parque",
             "tags" : [ "Relax", "Animales" ]
           }]
+
+        paramsFilt = [
+          '',
+          [],
+          [false, new Date(Date.now()), new Date(2022, 1, 20), 50, [39.483576585548036, -1.3474393230643172], 0],
+          true
+        ]
+
+        expectedLengthFilt = 2
+
+        expectedMembersFilt = [
+          {
+            "averageScore" : 0,
+            "description" : "Exposición en el Museo de las Ciencias sobre bla, bla, bla",
+            "finishDate" : "2022-12-09T13:30:00.894718",
+            "id" : 2,
+            "images" : [ "museo_ciencias_1.jpg", "museo_ciencias_2.jpg" ],
+            "latitude" : 38.456232931711405,
+            "longitude" : -0.37883275282491097,
+            "maxParticipants" : -1,
+            "name" : "Visita al Museo de las Ciencias",
+            "owner" : "niMeffxvboZAdeimcmoy03Swjfk1",
+            "participants" : [ "niMeffxvboZAdeimcmoy03Swjfk1", "Xamie8BQKCdD6mup0ew5KlQFBiI2", "JL27oXV1FJhs0dr4GX1A1EV2km03", "niMeffxvboZAdeimcmoy03Swjfk1" ],
+            "price" : 15,
+            "private" : false,
+            "startDate" : "2022-12-09T11:00:00.894718",
+            "summary" : "Visita a la exposición del Museo de las Ciencias de octubre",
+            "tags" : [ "Museos", "Cultura" ]
+          }, {
+            "averageScore" : 0,
+            "description" : "La biblioteca de la etsinf regala libros de ediciones antiguas, ven a recoger el que te apetezca",
+            "finishDate" : "2021-12-21T11:25:55.894718",
+            "id" : 3,
+            "images" : [ "scaled_image_picker2154400090595674564.jpg" ],
+            "latitude" : 39.4830058424561,
+            "longitude" : -0.3472847118973732,
+            "maxParticipants" : 60,
+            "name" : "Biblioteca ETSINF regala libros",
+            "owner" : "Xamie8BQKCdD6mup0ew5KlQFBiI2",
+            "participants" : [ "Xamie8BQKCdD6mup0ew5KlQFBiI2" ],
+            "possiblyParticipants" : [ "gBDVdiNLi5cVNXkaJPtPneDV3P82" ],
+            "price" : 0,
+            "private" : false,
+            "startDate" : "2021-12-20T11:25:55.894674",
+            "summary" : "La biblioteca de la etsinf regala libros de ediciones antiguas, ven a recoger el que te apetezca",
+            "tags" : [ "Museos", "Tecnología", "Cultura" ]
+          }
+        ]
     })
 
     it('return all the events', async function(){
@@ -199,8 +247,16 @@ describe('#searchTest()', function(){
         expect(result).to.exist //the result is at least generated
         expect(result).to.have.lengthOf(expectedLength) //the result must have 7 events 
         expect(result).to.have.members(expectedMembers) //the result must contain this events  
-      })
-            
-               
+      })            
     })
+
+    it('return expected filtered events from DB', async function(){
+        searchT(paramsFilt[0], paramsFilt[1], paramsFilt[2], paramsFilt[3]).then(function(result){
+          expect(result).to.exist //the result is at least generated
+          expect(result).to.have.lengthOf(expectedLengthFilt) //the result must have 7 events 
+          expect(result).to.have.members(expectedMembersFilt) //the result must contain this events 
+        })
+    })
+
+
 })
