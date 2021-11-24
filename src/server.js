@@ -1,6 +1,7 @@
 import express from 'express'
 import multer from 'multer'
 import { readFile, unlink } from 'fs'
+import { stdout } from 'process'
 
 import { recomend } from './search/recomendations.js'
 import { search } from './search/search.js'
@@ -29,8 +30,8 @@ import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGro
     removeGroupRequest, addGroupRequestToUsers } from './users/groups.js'
 import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
-import { stdout } from 'process'
 import { createMemory, getMemories } from './events/memories.js'
+import { addSurveyToEvent, vote } from './events/surveys.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -328,6 +329,16 @@ app.get('/eventScores', (req, res) => {
 
 app.post('/eventScores', (req, res) => {
     addEventScore(req.query.user, req.query.event, parseFloat(req.query.score))
+    res.send()
+})
+
+app.post('/surveys', (req, res) => {
+    addSurveyToEvent(req.query.event, req.body)
+    res.send()
+})
+
+app.post('/votes', (req, res) => {
+    vote(req.query.event, req.query.survey, req.query.user, req.query.option)
     res.send()
 })
 
