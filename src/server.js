@@ -298,7 +298,6 @@ app.get('/groups', (req, res) => {
 })
 
 app.post('/groups/:ids', (req, res) => {
-    stdout.write(req.params.ids);
     let groupId = createGroup(req.query.creator)
     addGroupRequestToUsers(groupId, req.params.ids.split(","))
     res.send(groupId)
