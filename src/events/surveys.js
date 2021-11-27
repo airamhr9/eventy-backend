@@ -39,6 +39,8 @@ export function addSurveyToEvent(eventId, surveyData) {
     let objectToPost = {
         id: newSurveyId,
         numVotes: 0,
+        startDate: surveyData.startDate,
+        finishDate: surveyData.finishDate,
         question: surveyData.question,
         options: []
     }
