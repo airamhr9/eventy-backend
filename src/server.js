@@ -1,7 +1,6 @@
 import express from 'express'
 import multer from 'multer'
 import { readFile, unlink } from 'fs'
-import { stdout } from 'process'
 
 import { recomend } from './search/recomendations.js'
 import { search } from './search/search.js'
@@ -31,7 +30,7 @@ import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGro
 import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
 import { createMemory, getMemories } from './events/memories.js'
-import { sendSurvey, addSurveyToEvent, vote } from './events/surveys.js'
+import { sendEventSurveys, addSurveyToEvent, vote } from './events/surveys.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -332,7 +331,7 @@ app.post('/eventScores', (req, res) => {
 })
 
 app.get('/surveys', (req, res) => {
-    sendSurvey(req.query.event, req.query.survey, req.query.user, res)
+    sendEventSurveys(req.query.event, req.query.user, res)
 })
 
 app.post('/surveys', (req, res) => {

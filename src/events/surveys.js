@@ -3,16 +3,20 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
-export function sendSurvey(eventId, surveyId, userId, res) {
-    get(child(rdbRef, `events/${eventId}/surveys/${surveyId}`)).then(snapshot => {
-        let survey = snapshot.val()
-        for (let option of survey.options) {
-            if (option.votes == undefined) {
-                option.votes = []
+export function sendEventSurveys(eventId, userId, res) {
+    get(child(rdbRef, `events/${eventId}/surveys`)).then(snapshot => {
+        let eventSurveys = Object.values(snapshot.val())
+        let result = []
+        for (let survey of eventSurveys) {
+            for (let option of survey.options) {
+                if (option.votes == undefined) {
+                    option.votes = []
+                }
             }
-        }
-        survey.userHasVoted = userHasVoted(survey, userId)
-        res.send(survey)
+            survey.userHasVoted = userHasVoted(survey, userId)
+            result.push(survey)
+        }        
+        res.send(result)
     })
 }
 
