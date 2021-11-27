@@ -332,7 +332,7 @@ app.post('/eventScores', (req, res) => {
 })
 
 app.get('/surveys', (req, res) => {
-    sendSurvey(req.query.event, req.query.survey, res)
+    sendSurvey(req.query.event, req.query.survey, req.query.user, res)
 })
 
 app.post('/surveys', (req, res) => {

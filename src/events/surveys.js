@@ -3,24 +3,28 @@ import { rdb } from '../index.js'
 
 const rdbRef = ref(rdb)
 
-export function sendSurvey(eventId, surveyId, res) {
+export function sendSurvey(eventId, surveyId, userId, res) {
     get(child(rdbRef, `events/${eventId}/surveys/${surveyId}`)).then(snapshot => {
         let survey = snapshot.val()
-
-        /*
-        result = {
-            id,
-            votes,
-            question,
-            options: {
-                text,
-                users,
-                porcentaje -> CALCULAR
+        for (let option of survey.options) {
+            if (option.votes == undefined) {
+                option.votes = []
             }
         }
-        */
-
+        survey.userHasVoted = userHasVoted(survey, userId)
+        res.send(survey)
     })
+}
+
+function userHasVoted(survey, userId) {
+    for (let option of survey.options) {
+        for (let user of option.votes) {
+            if (user == userId) {
+                return true
+            }
+        }
+    }
+    return false
 }
 
 export function addSurveyToEvent(eventId, surveyData) {
@@ -37,7 +41,8 @@ export function addSurveyToEvent(eventId, surveyData) {
     surveyData.options.forEach(option => {
         objectToPost.options.push({
             text: option,
-            votes: []
+            votes: [],
+            percentage: 0.0
         })
     })
 
@@ -49,11 +54,20 @@ export function vote(eventId, surveyId, userId, option) {
     get(child(rdbRef, path)).then(snapshot => {
         let survey = snapshot.val()
         survey.numVotes++
+        
         let optionObject = survey.options[getIndexOfOption(survey, option)]
         if (optionObject.votes == undefined) {
             optionObject.votes = []
         }
         optionObject.votes.push(userId)
+
+        for (let opt of survey.options) {
+            if (opt.votes == undefined) {
+                opt.votes = []
+            }
+            opt.percentage = percentageOfOption(opt.votes.length, survey.numVotes)
+        }
+
         update(child(rdbRef, path), survey)
     })
 }
@@ -65,4 +79,8 @@ function getIndexOfOption(survey, option) {
         }
     }
     return -1
+}
+
+function percentageOfOption(optionVotes, totalVotes) {
+    return optionVotes / totalVotes * 100
 }
