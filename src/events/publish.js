@@ -6,12 +6,10 @@ import { rdb } from '../index.js'
 const dbm = new DatabaseManager
 const rdbRef = ref(rdb)
 
-export async function publishEvent(description, finishDate, images, latitude, longitude, maxParticipants, name, owner,
-    price, isPrivate, startDate, summary, tags) { 
+export async function publishEvent(event) {
     await generateEventId()
-    const newEvent = new Event(description, finishDate, nextEventId, images, latitude, longitude, maxParticipants,
-        name, owner, price, isPrivate, startDate, summary, tags)
-    dbm.uploadEvent(newEvent)
+    event.id = nextEventId
+    dbm.uploadEvent(event)
 }
 
 let nextEventId

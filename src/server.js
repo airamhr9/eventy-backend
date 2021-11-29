@@ -82,9 +82,7 @@ app.get('/events', async (req, res) => {
 })
 
 app.post('/events', (req,res) => {
-    publishEvent(req.body.description, req.body.finishDate, req.body.images, req.body.latitude, req.body.longitude,
-        req.body.maxParticipants, req.body.name, req.body.owner, req.body.price, req.body.private, req.body.startDate,
-        req.body.summary, req.body.tags)
+    publishEvent(req.body)
     res.send()
 })
 
