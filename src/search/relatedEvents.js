@@ -4,7 +4,7 @@ import { replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
-export function related(res, tags, latitude, longitude, page){
+export function related(res, tags, latitude, longitude, eventId, page){
     get(child(rdbRef, `events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let result = []
@@ -17,7 +17,7 @@ export function related(res, tags, latitude, longitude, page){
                     element.possiblyParticipants = []
                 }
                 
-                if(findCommonElements(tags, element.tags) && element.private == false){
+                if(findCommonElements(tags, element.tags) && element.private == false && element.id != eventId){
                     if(new Date(element.finishDate) >= new Date(Date.now())){
                         result.push(element)
                     }
@@ -32,7 +32,7 @@ export function related(res, tags, latitude, longitude, page){
 
 function findCommonElements(arr1, arr2) {
     try {
-      return arr1.every(item => arr2.includes(item))
+      return arr1.some(item => arr2.includes(item))
     } catch (error) {
       return "no se pudo encontrar"
     }
@@ -46,18 +46,11 @@ function sortByLocation(events, lat, lon, res, page){
             var longE = element.longitude
             var dist = distance(parseFloat(lat), parseFloat(lon), latE, longE, "K")
             element.distance = dist.toFixed(2)
-            
-            if(element.distance > 0.1){
-                let i = events.indexOf(element)
-                events.splice(i, 1)
-            }
         })
 
         events.sort(function(a, b){
             return parseFloat(a.distance) - parseFloat(b.distance)
         })
-        //console.log(events)
-        //emptyList(events)
 
         returnRecomendations(res, events, page)
     } catch (error) {

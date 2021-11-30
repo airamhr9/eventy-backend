@@ -31,7 +31,7 @@ import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
 import { createMemory, getMemories } from './events/memories.js'
 import { sendEventSurveys, addSurveyToEvent, vote } from './events/surveys.js'
-import { related } from './search/relatedEvens.js'
+import { related } from './search/relatedEvents.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -72,7 +72,7 @@ app.get('/recomend', (req, res) =>{
 })
 
 app.get('/related', (req, res) =>{
-    related(res, req.query.tags, req.query.lat, req.query.long, null)
+    related(res, req.query.tags, req.query.lat, req.query.long, req.query.eventId, null)
 })
 
 app.get('/events', async (req, res) => {
