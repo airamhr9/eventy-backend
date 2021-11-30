@@ -5,17 +5,19 @@ const rdbRef = ref(rdb)
 
 export function sendEventSurveys(eventId, userId, res) {
     get(child(rdbRef, `events/${eventId}/surveys`)).then(snapshot => {
-        let eventSurveys = Object.values(snapshot.val())
         let result = []
-        for (let survey of eventSurveys) {
-            for (let option of survey.options) {
-                if (option.votes == undefined) {
-                    option.votes = []
+        if (snapshot.exists()) {
+            let eventSurveys = Object.values(snapshot.val())        
+            for (let survey of eventSurveys) {
+                for (let option of survey.options) {
+                    if (option.votes == undefined) {
+                        option.votes = []
+                    }
                 }
+                survey.userHasVoted = userHasVoted(survey, userId)
+                result.push(survey)
             }
-            survey.userHasVoted = userHasVoted(survey, userId)
-            result.push(survey)
-        }        
+        }
         res.send(result)
     })
 }
