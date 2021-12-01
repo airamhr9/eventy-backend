@@ -58,10 +58,13 @@ export function addSurveyToEvent(eventId, surveyData) {
     set(ref(rdb, path), objectToPost)
 }
 
-export async function addDateSurveyToNewEvent(surveyData) {
+export async function addDateSurveyToNewEvent(surveyData, res) {
     await generateEventId()
+    set(child(rdbRef, `events/${nextEventId}`), {
+        id: nextEventId
+    })
     addSurveyToEvent(nextEventId, surveyData)
-    res.send(nextEventId)
+    res.send(nextEventId.toString())
 }
 
 export function vote(eventId, surveyId, userId, option) {
