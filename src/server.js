@@ -30,7 +30,7 @@ import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGro
 import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
 import { createMemory, getMemories } from './events/memories.js'
-import { sendEventSurveys, addSurveyToEvent, vote } from './events/surveys.js'
+import { sendEventSurveys, addSurveyToEvent, addDateSurveyToNewEvent, vote } from './events/surveys.js'
 import { related } from './search/relatedEvents.js'
 
 const app = express()
@@ -338,8 +338,12 @@ app.get('/surveys', (req, res) => {
 })
 
 app.post('/surveys', (req, res) => {
-    addSurveyToEvent(req.query.event, req.body)
-    res.send()
+    if (req.query.newEvent != undefined) {
+        addDateSurveyToNewEvent(req.body, res)
+    } else {
+        addSurveyToEvent(req.query.event, req.body)
+        res.send()
+    }
 })
 
 app.post('/votes', (req, res) => {

@@ -1,5 +1,6 @@
 import { child, get, ref, update, push, set } from '@firebase/database'
 import { rdb } from '../index.js'
+import { generateEventId, nextEventId} from './publish.js'
 
 const rdbRef = ref(rdb)
 
@@ -55,6 +56,12 @@ export function addSurveyToEvent(eventId, surveyData) {
     })
 
     set(ref(rdb, path), objectToPost)
+}
+
+export async function addDateSurveyToNewEvent(surveyData) {
+    await generateEventId()
+    addSurveyToEvent(nextEventId, surveyData)
+    res.send(nextEventId)
 }
 
 export function vote(eventId, surveyId, userId, option) {
