@@ -1,10 +1,11 @@
 export class Post {
-    constructor(id, title, text, date, author, location) {
+    constructor(id, title, text, date, author, authorName, location) {
         this.id = id
         this.title = title 
         this.text = text
         this.date = date
         this.author = author
+        this.authorName = authorName
         this.location = location
         this.numComments = 0
         this.likes = 0

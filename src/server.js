@@ -253,7 +253,7 @@ app.get('/searchUsers', (req, res) => {
 })
 
 app.post('/post', (req,res) => {
-    createPost(req.query.idCommunity, req.query.title, req.query.text, req.query.date, req.query.author, req.query.images, res)
+    createPost(req.query.idCommunity, req.query.title, req.query.text, req.query.date, req.query.author, req.query.authorName, req.query.images, res)
 })
 
 app.get('/allPosts', (req,res) => {
