@@ -32,7 +32,7 @@ export function updateCommEvent(commId, eventId, data) {
 }
 
 export async function getCommEvents(commId){
-    get(child(rdbRef, `communities/${commId}/events/`)).then((snapshot) => {
+    await get(child(rdbRef, `communities/${commId}/events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let events = snapshot.val()
             let aux = []
