@@ -23,7 +23,6 @@ export function related(res, tags, latitude, longitude, eventId, page){
                     }
                 }                
             })
-            console.log(result.length)
             sortByLocation(result, latitude, longitude, res, page)
         }
         
@@ -110,7 +109,6 @@ async function returnRecomendations(res, events, page){
             result.push(objectWithURLs)
         }
         var pagedResult = makeJSON(page, result)
-        console.log(pagedResult)
         var response = {"count": pagedResult.length, "items":pagedResult}
         res.json(response)
     } catch (error) {
