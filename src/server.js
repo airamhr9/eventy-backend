@@ -32,6 +32,7 @@ import { filterByGroup } from './users/groupsFilter.js'
 import { createMemory, getMemories } from './events/memories.js'
 import { sendEventSurveys, addSurveyToEvent, addDateSurveyToNewEvent, vote } from './events/surveys.js'
 import { related } from './search/relatedEvents.js'
+import { getCommEvents, publishCommEvent } from './communities/communityEvents.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -88,6 +89,16 @@ app.get('/events', async (req, res) => {
 
 app.post('/events', (req,res) => {
     publishEvent(req.body)
+    res.send()
+})
+
+app.get('/eventsComm', async (req, res) => {
+    let result = await getCommEvents(req.query.commId)
+    res.send(result)
+})
+
+app.post('/eventsComm', async (req, res) => {
+    publishCommEvent(req.body, req.query.commId)
     res.send()
 })
 
