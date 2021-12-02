@@ -37,7 +37,7 @@ export async function getCommEvents(commId){
             let events = snapshot.val()
             let aux = []
             for (let ev of events) {
-                await replaceImagesWithURL_Event(ev)
+                replaceImagesWithURL_Event(ev)
                 aux.push(objectWithURLs)
             }
             return aux
