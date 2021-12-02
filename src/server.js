@@ -11,7 +11,7 @@ import { createCommunity, getCommunityById, community, listUserCommunities, user
     } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents, 
     sendListUserFutureEvents } from './events/participants.js'
-import { publishEvent } from './events/publish.js'
+import { publishEvent, updateEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
 import { register } from './users/register.js'
@@ -89,6 +89,11 @@ app.get('/events', async (req, res) => {
 
 app.post('/events', (req,res) => {
     publishEvent(req.body)
+    res.send()
+})
+
+app.put('/events', (req, res) => {
+    updateEvent(req.query.event, req.body)
     res.send()
 })
 
