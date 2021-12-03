@@ -280,13 +280,13 @@ app.get('/post', (req,res) => {
     getPost(req.query.idPost, res)
 })
 
-app.post('/memory', (req,res) => {
+app.post('/memories', (req, res) => {
     createMemory(req.query.eventId, req.query.text, req.query.author, req.query.images, res)
-})//-------------------------------------------------------------------------
+})
 
-app.get('/memories', (req,res) => {
+app.get('/memories', (req, res) => {
     getMemories(req.query.eventId, res)
-})//-------------------------------------------------------------------------
+})
 
 app.post('/comment', (req,res) => {
     let message = req.body;
