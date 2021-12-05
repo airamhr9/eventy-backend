@@ -108,14 +108,9 @@ export async function sendMemoriesWithImages(memories, res){
     for(let memory of memories) {
         const path = `images/events/memories/${memory.images}`
         await getFileURL(path)
-
-        if(fileURL == `File <${path}> does not exist` ){
-            objectsToSend.push(memory)
-        }else{
-            memory.images = fileURL
-            objectWithURLs = memory
-            objectsToSend.push(objectWithURLs)
-        }      
+        memory.images = fileURL
+        objectWithURLs = memory
+        objectsToSend.push(objectWithURLs)      
     }
     res.send(objectsToSend)
 }
