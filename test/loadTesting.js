@@ -1,15 +1,20 @@
-import { loadTest } from 'loadtest';
+import { expect } from "chai"
+import { loadTest } from 'loadtest'
 
-const options = {
-	url: 'http://localhost:8000',
-	maxRequests: 1000,
-    concurrency: 20
-};
-loadTest(options, function(error, result)
-{
-	if (error)
-	{
-		return console.error('Got an error: %s', error);
-	}
-	console.log('Tests run successfully in ', result);
-});
+describe('stress testing', function(){
+    it('acces should be capable of handeling 30 users', function(done){
+        const options = {
+            url: 'http://localhost:8000/tags',
+            maxRequests: 100,
+            concurrency: 30
+        }
+
+        loadTest(options, function(err, result){
+            if(err){
+                return console.log(err)
+            }
+            expect(result.totalTimeSeconds).to.be.below(1)
+            done()
+        })
+    })
+})
