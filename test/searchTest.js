@@ -4,7 +4,7 @@ import { expect } from 'chai'
 
 var paramsTest, expectedLength, expectedMembers, paramsFilt, expectedMembersFilt, expectedLengthFilt
 
-describe('#searchTest()', function(){
+/*describe('#searchTest()', function(){
 
     this.beforeAll(function(){
         //[searchText, searchTags, filters, enableFilt]
@@ -261,4 +261,4 @@ describe('#searchTest()', function(){
     })
 
 
-})
+})*/

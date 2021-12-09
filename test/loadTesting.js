@@ -4,7 +4,7 @@ import { loadTest } from 'loadtest'
 describe('stress testing', function(){
     it('acces should be capable of handeling 30 users', function(done){
         const options = {
-            url: 'http://localhost:8000/tags',
+            url: 'http://localhost:8000/recomend?userId=niMeffxvboZAdeimcmoy03Swjfk1&latitude=19&longitude=-2',
             maxRequests: 100,
             concurrency: 30
         }
@@ -13,6 +13,7 @@ describe('stress testing', function(){
             if(err){
                 return console.log(err)
             }
+            console.log(result)
             expect(result.totalTimeSeconds).to.be.below(1)
             done()
         })
