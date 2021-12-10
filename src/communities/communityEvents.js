@@ -2,7 +2,8 @@ import { child, get, ref, update } from '@firebase/database'
 import { Event } from '../objects/event.js'
 import { DatabaseManager } from '../database/databaseManager.js'
 import { rdb } from '../index.js'
-import {  replaceImagesWithURL_Event } from '../images.js'
+import {  replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
+
 
 
 const dbm = new DatabaseManager
