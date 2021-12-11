@@ -41,6 +41,9 @@ export async function getCommEvents(commId, res){
 
             returnCommEvents(res, events)
         }
+        else {
+            res.send([])
+        }
     })
 }
 
