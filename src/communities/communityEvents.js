@@ -34,16 +34,25 @@ export function updateCommEvent(commId, eventId, data) {
     update(child(rdbRef, `communities/${commId}/events/${eventId}`), data)
 }
 
-export async function getCommEvents(commId){
+export async function getCommEvents(commId, res){
     await get(child(rdbRef, `communities/${commId}/events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let events = snapshot.val()
-            let aux = []
-            for (let ev of events) {
-                replaceImagesWithURL_Event(ev)
-                aux.push(objectWithURLs)
-            }
-            return aux
+
+            returnCommEvents(res, events)
         }
     })
+}
+
+async function returnCommEvents(res, events){
+    try {
+        let result = []
+        for (let ev of events) {
+            await replaceImagesWithURL_Event(ev)
+            result.push(objectWithURLs)
+        }
+        res.send(result)
+    } catch (error) {
+        return "no se pudo enviar"
+    }
 }

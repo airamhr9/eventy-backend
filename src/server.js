@@ -98,8 +98,7 @@ app.put('/events', (req, res) => {
 })
 
 app.get('/eventsComm', async (req, res) => {
-    let result = await getCommEvents(req.query.commId)
-    res.send(result)
+    await getCommEvents(req.query.commId, res)
 })
 
 app.post('/eventsComm', async (req, res) => {
