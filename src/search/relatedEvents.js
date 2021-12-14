@@ -4,12 +4,11 @@ import { replaceImagesWithURL_Event, objectWithURLs } from '../images.js'
 
 const rdbRef = ref(rdb)
 
-export function recomend(res, user, latitude, longitude, page){
+export function related(res, tags, latitude, longitude, eventId, page){
     get(child(rdbRef, `events/`)).then((snapshot) => {
         if(snapshot.exists()){
             let result = []
             let events = snapshot.val()
-            let pref = user.preferences
             events.forEach(element => {
                 if (element.participants == undefined) {
                     element.participants = []
@@ -18,26 +17,12 @@ export function recomend(res, user, latitude, longitude, page){
                     element.possiblyParticipants = []
                 }
                 
-                if(findCommonElements(element.tags, pref) && element.private == false && element.community == null){
+                if(findCommonElements(tags, element.tags) && element.private == false && element.id != eventId){
                     if(new Date(element.finishDate) >= new Date(Date.now())){
-                        if(element.participants.includes(user.id) == false && element.possiblyParticipants.includes(user.id) == false){
-                            result.push(element)
-                        }
+                        result.push(element)
                     }
                 }                
             })
-            
-            if(result.length == 0){
-                for(var i = 0; i<events.length;i++){
-                    if(events[i].private == false){
-                        if(new Date(events[i].finishDate) >= new Date(Date.now())){
-                            if(events[i].participants.includes(user.id) == false && events[i].possiblyParticipants.includes(user.id) == false){
-                                result.push(events[i])
-                            }
-                        }
-                    }
-                }
-            }
             sortByLocation(result, latitude, longitude, res, page)
         }
         
@@ -65,7 +50,6 @@ function sortByLocation(events, lat, lon, res, page){
         events.sort(function(a, b){
             return parseFloat(a.distance) - parseFloat(b.distance)
         })
-        emptyList(events)
 
         returnRecomendations(res, events, page)
     } catch (error) {
@@ -103,16 +87,16 @@ function emptyList(events){
 function makeJSON(page, result){
     var pagedEvents
     if(page == null){
-        if(result.length<20){
+        if(result.length<10){
             pagedEvents = result.slice(0, result.length-1)
         }
         pagedEvents = result.slice(0,19)
     }
     else{
-        if(result.length<(page*10)+20){
+        if(result.length<(page*10)+10){
             pagedEvents = result.slice(page*10, result.length-1)
         }
-        pagedEvents = result.slice(page*10, (page*10)+19)
+        pagedEvents = result.slice(page*10, (page*10)+9)
     }
     return pagedEvents
 }

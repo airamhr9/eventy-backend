@@ -10,7 +10,7 @@ const db = getDatabase()
 export let post
 
 
-export async function createPost(idCommunity, title, text, date, author, images, res) {
+export async function createPost(idCommunity, title, text, date, author, authorName, images, res) {
     const rdbRefC = ref(rdb,`communities/${idCommunity}/posts/`)
     const newRef = push(rdbRefC)
     const idKey = newRef.key
@@ -22,6 +22,7 @@ export async function createPost(idCommunity, title, text, date, author, images,
         text : text,
         date : date,
         author : author,
+        authorName : authorName,
         numComments : 0, 
         images : images,
         likes : 0,

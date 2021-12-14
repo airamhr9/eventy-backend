@@ -6,28 +6,9 @@ const rdbRef = ref(rdb)
 
 
 export class DatabaseManager {
-    uploadEvent(eventToUpload){
-        eventToUpload instanceof Event
-
-        set(ref(rdb,`events/${eventToUpload.getId()}`),{
-            description : eventToUpload.getDescription(),
-            finishDate : eventToUpload.getFinishDate(),
-            id : eventToUpload.getId(),
-            images : eventToUpload.getImages(),
-            latitude : eventToUpload.getLatitude(),
-            longitude : eventToUpload.getLongitude(),
-            maxParticipants : eventToUpload.getMaxParticipants(),
-            name : eventToUpload.getName(),
-            owner : eventToUpload.getOwner(),
-            participants: eventToUpload.getParticipants(),
-            price : eventToUpload.getPrice(),
-            private : eventToUpload.getPrivate(),
-            startDate : eventToUpload.getStartDate(),
-            summary : eventToUpload.getSummary(),
-            tags : eventToUpload.getTags(),
-            community : eventToUpload.getCommunity(),
-            averageScore : 0
-        } )
+    
+    uploadEvent(event) {
+        set(child(rdbRef, `events/${event.id}`), event)
     }
 
     uploadEventT(eventToUpload, id){
@@ -98,5 +79,9 @@ export class DatabaseManager {
         })
     
         return returnArr
+    }
+
+    uploadCommEvent(event) {
+        set(child(rdbRef, `events/${event.id}`), event)
     }
 }

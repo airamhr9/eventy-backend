@@ -53,16 +53,5 @@ export async function getUserByUsername(username) {
 }
 
 export function updateUser(user) {
-    update(ref(rdb, `users/${user.id}`), {
-        bio: user.bio,
-        birthdate: user.birthdate,
-        email: user.email,
-        id: user.id,
-        image: user.image,
-        password: user.password,
-        preferences: user.preferences,
-        username: user.username,
-        friends : user.friends || [],
-        friendshipRequests : user.friendshipRequests || []
-    })
+    update(ref(rdb, `users/${user.id}`), user)
 }

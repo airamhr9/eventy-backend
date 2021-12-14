@@ -18,7 +18,7 @@ export function search(searchText, searchTags, filters, enableFilt, res){
           let names = makeLowerCase(element.name)
           let tags = element.tags
 
-          if(names.includes(makeLowerCase(searchText))){
+          if(names.includes(makeLowerCase(searchText))  && element.community == null){
             if(element.tags != undefined && findCommonElements(tags, searchTags) && element.private == false){
               result.push(element)
             }
@@ -132,7 +132,8 @@ export async function searchT(searchText, searchTags, filters, enableFilt){ //ve
         let names = makeLowerCase(events[key].name)
         let tags = events[key].tags
 
-        if(names.includes(makeLowerCase(searchText))){
+        if(names.includes(makeLowerCase(searchText) && events[key].community == null)){
+          console.log(events[key].community)
           if(events[key].tags != undefined && findCommonElements(tags, searchTags) && events[key].private == false){
             result.push(events[key])
           }

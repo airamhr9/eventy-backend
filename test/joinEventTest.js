@@ -6,7 +6,7 @@ import { getEventParticipantsT } from '../src/events/participants.js'
 
 var userId, event1, event2, expectedParticipants1, expectedParticipants2
 
-describe('#joinEventTest()', function(){
+/*describe('#joinEventTest()', function(){
 
     this.beforeAll(async function(){
 
@@ -55,4 +55,4 @@ describe('#joinEventTest()', function(){
     })
 
 
-})
+})*/

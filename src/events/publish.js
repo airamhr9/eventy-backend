@@ -1,4 +1,4 @@
-import { child, get, ref } from '@firebase/database'
+import { child, get, ref, update } from '@firebase/database'
 import { Event } from '../objects/event.js'
 import { DatabaseManager } from '../database/databaseManager.js'
 import { rdb } from '../index.js'
@@ -6,17 +6,15 @@ import { rdb } from '../index.js'
 const dbm = new DatabaseManager
 const rdbRef = ref(rdb)
 
-export async function publishEvent(description, finishDate, images, latitude, longitude, maxParticipants, name, owner,
-    price, isPrivate, startDate, summary, tags) { 
+export async function publishEvent(event) {
     await generateEventId()
-    const newEvent = new Event(description, finishDate, nextEventId, images, latitude, longitude, maxParticipants,
-        name, owner, price, isPrivate, startDate, summary, tags)
-    dbm.uploadEvent(newEvent)
+    event.id = nextEventId
+    dbm.uploadEvent(event)
 }
 
-let nextEventId
+export let nextEventId
 
-async function generateEventId() {
+export async function generateEventId() {
     await get(child(rdbRef, 'events')).then((snapshot) => {
         if (snapshot.exists()) {
             let events = snapshot.val()
@@ -34,4 +32,8 @@ export async function publishEventT(id, description, finishDate, images, latitud
     const newEvent = new Event(description, finishDate, nextEventId, images, latitude, longitude, maxParticipants,
         name, owner, price, isPrivate, startDate, summary, tags)
     dbm.uploadEventT(newEvent, id)
+}
+
+export function updateEvent(eventId, data) {
+    update(child(rdbRef, `events/${eventId}`), data)
 }

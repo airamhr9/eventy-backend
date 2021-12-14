@@ -1,7 +1,6 @@
 import express from 'express'
 import multer from 'multer'
 import { readFile, unlink } from 'fs'
-import { stdout } from 'process'
 
 import { recomend } from './search/recomendations.js'
 import { search } from './search/search.js'
@@ -12,7 +11,7 @@ import { createCommunity, getCommunityById, community, listUserCommunities, user
     } from './communities/community.js'
 import { getEvent, event, getEventParticipants, eventParticipants, listUserOlderEvents, userOlderEvents, 
     sendListUserFutureEvents } from './events/participants.js'
-import { publishEvent } from './events/publish.js'
+import { publishEvent, updateEvent } from './events/publish.js'
 import { joinEvent } from './events/joinEvent.js'
 import { login } from './users/login.js'
 import { register } from './users/register.js'
@@ -31,7 +30,9 @@ import { sendUserGroups, sendUserGroupRequests, createGroup, updateGroup, addGro
 import { sendUserEventScore, addEventScore } from './events/eventScores.js'
 import { filterByGroup } from './users/groupsFilter.js'
 import { createMemory, getMemories } from './events/memories.js'
-import { sendSurvey, addSurveyToEvent, vote } from './events/surveys.js'
+import { sendEventSurveys, addSurveyToEvent, addDateSurveyToNewEvent, vote } from './events/surveys.js'
+import { related } from './search/relatedEvents.js'
+import { getCommEvents, publishCommEvent } from './communities/communityEvents.js'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -71,6 +72,10 @@ app.get('/recomend', (req, res) =>{
     }
 })
 
+app.get('/related', (req, res) =>{
+    related(res, req.query.tags, req.query.lat, req.query.long, req.query.eventId, null)
+})
+
 app.get('/events', async (req, res) => {
     if (req.query.participants != undefined) { 
         await getEventParticipants(req.query.id)
@@ -83,9 +88,21 @@ app.get('/events', async (req, res) => {
 })
 
 app.post('/events', (req,res) => {
-    publishEvent(req.body.description, req.body.finishDate, req.body.images, req.body.latitude, req.body.longitude,
-        req.body.maxParticipants, req.body.name, req.body.owner, req.body.price, req.body.private, req.body.startDate,
-        req.body.summary, req.body.tags)
+    publishEvent(req.body)
+    res.send()
+})
+
+app.put('/events', (req, res) => {
+    updateEvent(req.query.event, req.body)
+    res.send()
+})
+
+app.get('/eventsComm', async (req, res) => {
+    await getCommEvents(req.query.commId, res)
+})
+
+app.post('/eventsComm', async (req, res) => {
+    publishCommEvent(req.body, req.query.commId)
     res.send()
 })
 
@@ -251,7 +268,7 @@ app.get('/searchUsers', (req, res) => {
 })
 
 app.post('/post', (req,res) => {
-    createPost(req.query.idCommunity, req.query.title, req.query.text, req.query.date, req.query.author, req.query.images, res)
+    createPost(req.query.idCommunity, req.query.title, req.query.text, req.query.date, req.query.author, req.query.authorName, req.query.images, res)
 })
 
 app.get('/allPosts', (req,res) => {
@@ -262,13 +279,13 @@ app.get('/post', (req,res) => {
     getPost(req.query.idPost, res)
 })
 
-app.post('/memory', (req,res) => {
+app.post('/memories', (req, res) => {
     createMemory(req.query.eventId, req.query.text, req.query.author, req.query.images, res)
-})//-------------------------------------------------------------------------
+})
 
-app.get('/memories', (req,res) => {
+app.get('/memories', (req, res) => {
     getMemories(req.query.eventId, res)
-})//-------------------------------------------------------------------------
+})
 
 app.post('/comment', (req,res) => {
     let message = req.body;
@@ -298,7 +315,6 @@ app.get('/groups', (req, res) => {
 })
 
 app.post('/groups/:ids', (req, res) => {
-    stdout.write(req.params.ids);
     let groupId = createGroup(req.query.creator)
     addGroupRequestToUsers(groupId, req.params.ids.split(","))
     res.send(groupId)
@@ -333,12 +349,16 @@ app.post('/eventScores', (req, res) => {
 })
 
 app.get('/surveys', (req, res) => {
-    sendSurvey(req.query.event, req.query.survey, res)
+    sendEventSurveys(req.query.event, req.query.user, res)
 })
 
 app.post('/surveys', (req, res) => {
-    addSurveyToEvent(req.query.event, req.body)
-    res.send()
+    if (req.query.newEvent != undefined) {
+        addDateSurveyToNewEvent(req.body, res)
+    } else {
+        addSurveyToEvent(req.query.event, req.body)
+        res.send()
+    }
 })
 
 app.post('/votes', (req, res) => {

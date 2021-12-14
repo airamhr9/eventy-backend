@@ -107,7 +107,7 @@ export async function listUserOlderEvents(userId) {
     userOlderEvents = []
     let now = new Date().toISOString()
     for (let ev of allEvents) {
-        if (ev.participants.includes(userId) && ev.finishDate.localeCompare(now) < 0) {
+        if (userHasJoinedEvent(userId, ev) && ev.finishDate.localeCompare(now) <= 0) {
             userOlderEvents.push(ev)
         }
     }
@@ -118,7 +118,7 @@ export async function sendListUserFutureEvents(userId, res) {
     let futureEvents = []
     let now = new Date().toISOString()
     for (let ev of allEvents) {
-        if (ev.participants.includes(userId) && ev.finishDate.localeCompare(now) > 0) {
+        if (userHasJoinedEvent(userId, ev) && ev.finishDate.localeCompare(now) > 0) {
             futureEvents.push(ev)
         }
     }
@@ -128,4 +128,11 @@ export async function sendListUserFutureEvents(userId, res) {
         result.push(objectWithURLs)
     }
     res.send(result)
+}
+
+function userHasJoinedEvent(userId, event) {
+    if (event.possiblyParticipants == undefined) {
+        event.possiblyParticipants = []
+    }
+    return (event.participants.includes(userId) || event.possiblyParticipants.includes(userId))
 }
