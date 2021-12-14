@@ -81,7 +81,7 @@ export class DatabaseManager {
         return returnArr
     }
 
-    uploadCommEvent(event, id) {
-        set(child(rdbRef, `communities/${id}/events/${event.id}`), event)
+    uploadCommEvent(event) {
+        set(child(rdbRef, `events/${event.id}`), event)
     }
 }

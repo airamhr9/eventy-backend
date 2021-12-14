@@ -18,7 +18,7 @@ export function recomend(res, user, latitude, longitude, page){
                     element.possiblyParticipants = []
                 }
                 
-                if(findCommonElements(element.tags, pref) && element.private == false){
+                if(findCommonElements(element.tags, pref) && element.private == false && element.community == null){
                     if(new Date(element.finishDate) >= new Date(Date.now())){
                         if(element.participants.includes(user.id) == false && element.possiblyParticipants.includes(user.id) == false){
                             result.push(element)

@@ -132,7 +132,7 @@ export async function searchT(searchText, searchTags, filters, enableFilt){ //ve
         let names = makeLowerCase(events[key].name)
         let tags = events[key].tags
 
-        if(names.includes(makeLowerCase(searchText))){
+        if(names.includes(makeLowerCase(searchText) && events[key].community == null)){
           if(events[key].tags != undefined && findCommonElements(tags, searchTags) && events[key].private == false){
             result.push(events[key])
           }
