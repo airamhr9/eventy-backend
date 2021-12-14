@@ -70,7 +70,7 @@ export async function sendCommentsWithImages(comments, res){
 
     let objectsToSend = []
     for (let comment of comments) {
-        const path = `images/communities/posts/${comment.images}`
+        const path = `images/users/${comment.images}`
         await getFileURL(path)
         if(fileURL == `File <${path}> does not exist` ){
             objectsToSend.push(comment)
