@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { loadTest } from 'loadtest'
 
-describe('load testing --> 30 concurrent users', function(){
+describe('load testing --> 10.000 concurrent users', function(){
     it('Recommendations (Main Screen)', function(done){
         const options = {
             url: 'http://localhost:8000/recomend?userId=niMeffxvboZAdeimcmoy03Swjfk1&latitude=19&longitude=-2',
@@ -13,7 +13,7 @@ describe('load testing --> 30 concurrent users', function(){
             if(err){
                 return console.log(err)
             }
-            expect(result.totalTimeSeconds).to.be.below(1) //total time must be below 1 second
+            expect(result.totalTimeSeconds).to.be.below(3) //total time must be below 1 second
             done()
         })
     })
@@ -29,7 +29,7 @@ describe('load testing --> 30 concurrent users', function(){
             if(err){
                 return console.log(err)
             }
-            expect(result.totalTimeSeconds).to.be.below(1) //total time must be below 1 second
+            expect(result.totalTimeSeconds).to.be.below(3) //total time must be below 1 second
             done()
         })
     })
