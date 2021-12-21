@@ -8,19 +8,27 @@ const rdbRef = ref(rdb)
 export let event
 export let eventParticipants
 
-export async function getEventParticipants(eventId) {
+export async function getEventParticipants(eventId, replaceImagesWithURs) {
     await getEvent(eventId)
     let confirmedParticipants = []
     let possiblyParticipants = []
     for (let userId of event.participants) {
         await getUser(userId)
-        await replaceImagesWithURL_User(user)
-        confirmedParticipants.push(objectWithURLs)
+        if (replaceImagesWithURs) {
+            await replaceImagesWithURL_User(user)
+            confirmedParticipants.push(objectWithURLs)
+        } else {            
+            confirmedParticipants.push(user)
+        }        
     }
     for (let userId of event.possiblyParticipants) {
         await getUser(userId)
-        await replaceImagesWithURL_User(user)
-        possiblyParticipants.push(objectWithURLs)
+        if (replaceImagesWithURs) {
+            await replaceImagesWithURL_User(user)
+            possiblyParticipants.push(objectWithURLs)
+        } else {            
+            possiblyParticipants.push(user)
+        }
     }
     eventParticipants = [confirmedParticipants, possiblyParticipants]
 }

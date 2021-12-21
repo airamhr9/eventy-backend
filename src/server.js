@@ -78,8 +78,15 @@ app.get('/related', (req, res) =>{
 
 app.get('/events', async (req, res) => {
     if (req.query.participants != undefined) { 
-        await getEventParticipants(req.query.id)
-        res.send(eventParticipants)
+        if (req.query.testAVD != undefined) {
+            // Test de tiempo de ejecucion para AVD
+            await getEventParticipants(req.query.id, false)
+            res.send(eventParticipants)
+        } else {
+            await getEventParticipants(req.query.id, true)
+            res.send(eventParticipants)
+        }
+        
     } else {
         await getEvent(req.query.id)
         await replaceImagesWithURL_Event(event)
