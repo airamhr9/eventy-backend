@@ -1,1 +1,2 @@
 # eventy-backend
+student project
